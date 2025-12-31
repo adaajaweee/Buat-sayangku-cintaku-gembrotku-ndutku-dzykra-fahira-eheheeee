@@ -1,0 +1,3512 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🤍 Buat Cintaku, Gembrotku, Bawelku, Sayangku 🤍</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --cream:#FFF6EC;
+  --sage:#A8C3A0;
+  --pink:#F4B6C2;
+  --text:#4b5f55;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  background:linear-gradient(135deg,var(--cream),var(--sage));
+  font-family:'Quicksand',sans-serif;
+  color:var(--text);
+  overflow-x:hidden;
+}
+
+/* PAGE */
+.page{
+  position:absolute;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .8s ease;
+  overflow-y:auto;       /* scroll DI SINI */
+  padding:40px 0;        /* ruang atas & bawah */
+}
+
+.page.active{
+  opacity:1;
+  pointer-events:auto;
+}
+
+/* CARD */
+.card{
+  background:white;
+  width:92%;
+  max-width:420px;
+  padding:28px 22px;
+  border-radius:28px;
+  text-align:center;
+  box-shadow:0 18px 35px rgba(0,0,0,0.18);
+  margin-top:0;
+  margin-bottom:0;
+  align-self:flex-start;   /* INI KUNCINYA */
+}
+
+/* IMAGE */
+.kucing{ width:220px; }
+.surat{ width:170px; cursor:pointer; margin-top:14px; }
+
+/* OPENING GIF */
+.opening-img{
+  width:220px;
+  margin-bottom:18px;
+  opacity:0;
+  transform:scale(.95);
+}
+.opening-img.show{
+  animation:fadeZoom 1s ease forwards;
+}
+
+@keyframes fadeZoom{
+  to{opacity:1; transform:scale(1);}
+}
+
+/* FADE TEXT */
+.fade{
+  opacity:0;
+  transform:translateY(20px);
+}
+.fade.show{
+  animation:fadeUp .8s ease forwards;
+}
+@keyframes fadeUp{
+  to{opacity:1; transform:translateY(0);}
+}
+
+p{ font-size:18px; margin:12px 0; }
+
+button{
+  background:var(--pink);
+  border:none;
+  padding:12px 26px;
+  border-radius:18px;
+  font-size:16px;
+  cursor:pointer;
+  margin-top:18px;
+}
+
+/* PAGE 23 */
+#page23{
+  background:#FFF6EC;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.letter{
+  background:white;
+  padding:30px;
+  width:85%;
+  max-width:400px;
+  border-radius:22px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.08);
+  text-align:center;
+  position:relative;
+  animation:fadeUp 1.2s ease;
+}
+
+@keyframes fadeUp{
+  from{opacity:0; transform:translateY(30px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+.letter h2{
+  font-family:'Pacifico';
+  color:#A87C7C;
+  margin-bottom:10px;
+}
+
+.hint{
+  font-size:14px;
+  color:#777;
+  margin-bottom:15px;
+}
+
+#pesanDia{
+  width:100%;
+  margin:16px auto;        /* ⬅️ ini yang bikin dia bener-bener tengah */
+  display:block;           /* ⬅️ wajib */
+  box-sizing:border-box;   /* ⬅️ SUPER PENTING */
+  padding:14px;
+  border-radius:16px;
+  border:1px solid #ddd;
+  font-family:'Quicksand';
+  font-size:16px;
+  resize:none;
+  text-align:left;
+}
+
+#btnKirim{
+  margin-top:15px;
+  padding:10px 26px;
+  border:none;
+  border-radius:20px;
+  background:#A8C3A0;
+  color:white;
+  font-size:15px;
+  cursor:pointer;
+}
+
+#statusKirim{
+  margin-top:12px;
+  font-size:14px;
+}
+
+/* surat terbang */
+#envelope{
+  position:absolute;
+  bottom:-20px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:28px;
+  opacity:0;
+}
+
+.fly{
+  animation:fly 1.5s ease forwards;
+}
+
+@keyframes fly{
+  0%{opacity:1; transform:translate(-50%,0);}
+  100%{opacity:0; transform:translate(-50%,-120px);}
+}
+
+/* penutup */
+#penutup{
+  display:none;
+  margin-top:20px;
+  font-size:14px;
+  color:#555;
+  animation:fadeUp 1.5s ease;
+}
+
+.typing-wrap{
+  position:relative;
+  width:100%;
+}
+
+.pencil{
+  position:absolute;
+  left:14px;
+  top:14px;
+  font-size:20px;
+  opacity:0.4;
+  transition:all 0.3s ease;
+  pointer-events:none;
+}
+
+#pesanDia{
+  width:100%;
+  display:block;
+  box-sizing:border-box;
+  padding:14px 14px 14px 42px; /* ruang buat pensil */
+  border-radius:16px;
+  font-family:'Quicksand',sans-serif;
+  font-size:16px;
+  border:2px solid #222;
+  outline:none;
+  transition:all 0.3s ease;
+  min-height:200px;   /* ⬅️ INI KUNCINYA */
+}
+
+/* Pas fokus */
+#pesanDia:focus{
+  border-color:#9DBB98;
+  box-shadow:0 0 0 3px rgba(157,187,152,0.25);
+}
+
+/* Pensil aktif */
+#pesanDia:focus + .pencil,
+.typing-wrap:focus-within .pencil{
+  opacity:1;
+  transform:rotate(-8deg);
+}
+
+.reveal{
+  opacity:0;
+  transform:translateY(30px) scale(0.95);
+  transition:all 0.8s ease;
+}
+
+.reveal.show{
+  opacity:1;
+  transform:translateY(0) scale(1);
+}
+
+.fade-btn{
+  animation:fadeBtn .8s ease forwards;
+}
+
+@keyframes fadeBtn{
+  from{
+    opacity:0;
+    transform:translateY(12px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+/* ===== HAL 22 ===== */
+.page22{
+  display:flex;
+  flex-direction:column;
+  gap:40px;
+}
+
+/* item */
+.item22{
+  display:flex;
+  align-items:center;
+  gap:18px;
+  opacity:0;
+  transform:translateY(30px);
+  transition:all .8s ease;
+}
+
+.item22.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+.item22.right{ flex-direction:row; }
+.item22.left{ flex-direction:row-reverse; }
+
+/* teks */
+.text22{
+  width:50%;
+  font-size:16px;
+  line-height:1.6;
+  text-align:left;
+}
+
+/* frame foto */
+.frame22{
+  width:160px;
+  height:220px;
+  border-radius:16px;
+  overflow:hidden;
+  position:relative;
+  flex-shrink:0;
+}
+
+.frame22 img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  opacity:0;
+  transition:opacity 1s ease;
+}
+
+.frame22 img.active{
+  opacity:1;
+}
+
+.frame22{
+  box-shadow:0 10px 25px rgba(255,105,180,0.35);
+}
+
+/* ===== HAL 25 CREDIT SCENE - FIXED CENTER ===== */
+#page25 {
+  background: #000 !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden !important;
+  padding: 0;
+  margin: 0;
+}
+
+.credit-container {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0 0 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.credit-foto {
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 20px;
+  opacity: 0;
+  animation: fadeInPhoto 2s ease forwards;
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
+  position: relative; /* GANTI dari absolute */
+  top: 0;
+  z-index: 10;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+}
+
+@keyframes fadeInPhoto {
+  to { opacity: 0.9; }
+}
+
+/* FIX: HAPUS CONTAINER GANDA, GUNAKAN SATU SAJA */
+.credit-text-container {
+  position: absolute;
+  top: 220px; /* Jarak dari foto */
+  bottom: 20px;
+  width: 100%;
+  max-width: 700px; /* BATASI LEBAR MAX */
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 10px 20px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+/* HAPUS INI: .credit-scroll-container { ... } */
+
+/* Sistem teks - TENGAH PERFECT */
+.credit-text {
+  color: white;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  text-align: center;
+  margin: 6px 0 !important;
+  padding: 10px 20px;
+  width: 95%;
+  max-width: 650px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.7s ease;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-sizing: border-box;
+}
+
+.credit-text.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Untuk teks terakhir yang lebih besar */
+.credit-text.final {
+  font-size: 28px;
+  font-weight: 600;
+  color: #FFD700;
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+  margin: 25px 0 !important;
+  padding: 25px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid gold;
+  animation: glow 3s infinite alternate;
+}
+
+@keyframes glow {
+  from { box-shadow: 0 0 10px gold; }
+  to { box-shadow: 0 0 25px gold; }
+}
+
+/* Scrollbar styling */
+.credit-text-container::-webkit-scrollbar {
+  width: 5px;
+}
+
+.credit-text-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+.credit-text-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+/* Ending Love */
+.ending-love {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.95);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1000;
+  transition: opacity 2s ease;
+}
+
+.ending-love.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.love-emoji {
+  font-size: 120px;
+  margin-bottom: 20px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.love-text {
+  font-family: 'Pacifico', cursive;
+  font-size: 52px;
+  color: white;
+  text-shadow: 0 0 25px rgba(255, 182, 194, 0.9);
+  letter-spacing: 2px;
+}
+
+
+</style>
+</head>
+
+<body>
+
+<!-- MUSIK -->
+<audio id="bgMusic" loop>
+  <source src="Semoga.mp3" type="audio/mpeg">
+</audio>
+
+<!-- Audio untuk ending -->
+<audio id="endingMusic" loop>
+  <source src="Paul Partohap - 404_ HOME NOT FOUND [Lyric Video].mp3" type="audio/mpeg">
+</audio>
+
+<!-- HAL 1 -->
+<div class="page active" id="page1">
+  <div class="card">
+    <img src="Kucing 1.gif" class="kucing fade">
+    <p class="fade">Ada sesuatu yang mau aku sampein buat kamu, tolong simak yaaa, jangan sampe ada yang kelewattt ya sayangkuuuu 🤍</p>
+    <img src="Surat 1.png" class="surat fade" onclick="toOpening()">
+    <p class="fade"><small>Sekarang tap suratnya dulu yaa gembrotttt🥴🥴🥴</small></p>
+  </div>
+</div>
+
+<!-- OPENING -->
+<div class="page" id="opening">
+  <div class="card">
+    <img src="Kucing 2.gif" id="openingGif" class="opening-img">
+    <p id="openingText"></p>
+    <button id="btnOpening" style="display:none" onclick="goToPage(2)">
+      Sekarang lanjut ya sayangku ke halaman selanjutnya 🤍
+    </button>
+  </div>
+</div>
+
+<!-- HAL 2 : GAME TANGGAL -->
+<div class="page" id="page2">
+  <div class="card">
+    <img src="Kucing 3.gif" class="kucing fade">
+    <h2>Tebak dulu yaaa masa lupa kalo buat ini, udah aku pilihin tanggal cantik biar gampang inget eheheheee😅😅</h2>
+    <p>Tanggal jadian kita (<b>1–30</b>)</p>
+    <input type="number" id="guessTanggal" min="1" max="30">
+    <br><br>
+    <button onclick="cekTanggal()">Tebak</button>
+    <p id="hasilTanggal"></p>
+    <button id="btn2" style="display:none" onclick="goToPage(3)">
+      Okeh kita lanjut lagi ya sayangku yang gembrot dan keboooo 🤍
+    </button>
+  </div>
+</div>
+
+<!-- HAL 3 : GAME TEMPAT -->
+<div class="page" id="page3">
+  <div class="card">
+    <img src="Kucing 4.gif" class="kucing fade">
+    <hr>
+    <h3>Tempat favorit kita buat main, bahkan itu tuh tempat kita pertama kali main bareng ayo tebak apaa😉</h3>
+    <input type="text" id="guessTempat" placeholder="Tulis nama tempat...">
+    <br>
+    <button onclick="cekTempat()">Tebak</button>
+    <p id="hasilTempat"></p>
+    <button id="btn3" style="display:none" onclick="goToPage(4)">
+      Asiiikkk bisa jawab ya kamuu, oke kita lanjut yaaaa 🤍
+    </button>
+    <hr>
+  </div>
+</div>
+
+<!-- HAL 4 -->
+<div class="page" id="page4">
+  <div class="card">
+    <img src="Kucing 5.gif" class="kucing fade">
+    <hr>
+    <h3>Makanan favorit aku apa ayooo, kalo kamu kan sushi, matcha, dan lain lain, kalo aku? 😆😆😆</h3>
+    <input type="text" id="guessMakanan" placeholder="Tulis nama makanannya...">
+    <br>
+    <button onclick="cekMakanan()">Tebak</button>
+    <p id="hasilMakanan"></p>
+    <button id="btn4" style="display:none" onclick="goToPage(5)">
+      Aku kurang kurangin dechhh janjiii😅😅, sekarang kita lanjut lagi ya sayangkuuu 🤍
+    </button>
+    <hr>
+  </div>
+</div>
+
+<!-- HAL 5 -->
+<div class="page" id="page5">
+  <div class="card">
+    <img src="Kucing 6.gif" class="kucing fade">
+    <h2>Umur kita beda berapa hari ayooooo, gmpang lohh inii😋😋</h2>
+    <p>Berapa hari (<b>1–30</b>)</p>
+    <input type="number" id="guessHari" min="1" max="30">
+    <br><br>
+    <button onclick="cekHari()">Tebak</button>
+    <p id="hasilHari"></p>
+    <button id="btn5" style="display:none" onclick="goToPage(6)">
+      Aseekkkkk, pinter jugaa ya kamuu, kamu yang pinter atau google yang pinter yaaaa🤔🤔🤔🤍
+    </button>
+  </div>
+</div>
+
+<!-- HAL 6 -->
+<div class="page" id="page6">
+  <div class="card">
+    <img src="Kucing 7.gif" class="kucing fade">
+    <h2>Berapa banyak ikan cupang aku waktu itu ayoooooooo😋😋😋😋</h2>
+    <p>Berapa banyak (<b>1–10</b>)</p>
+    <input type="number" id="guessIkan" min="1" max="10">
+    <br><br>
+    <button onclick="cekIkan()">Tebak</button>
+    <p id="hasilIkan"></p>
+    <button id="btn6" style="display:none" onclick="goToPage(7)">
+      Okeeehh kita lanjut ke halaman selanjutnya yaa gembrott 🤍
+    </button>
+  </div>
+</div>
+
+<!-- HAL 7 -->
+<div class="page" id="page7">
+  <div class="card">
+    <img src="Kucing 8.gif" class="kucing fade">
+    <h2>Tanggal lahir aku berapa hayooooo, masa lupaa😢😢😢</h2>
+    <p>Tanggal berapa ayoooo (<b>1–30</b>)</p>
+    <input type="number" id="guessLahirCevi" min="1" max="30">
+    <br><br>
+    <button onclick="cekLahirCevi()">Tebak</button>
+    <p id="hasilLahirCevi"></p>
+    <button id="btn7" style="display:none" onclick="goToPage(8)">
+      Alhamdulillah masih inget, okee kita lanjut ya sayangkuuuuuuu 🤍
+    </button>
+  </div>
+</div>
+
+<!-- HAL 8 -->
+<div class="page" id="page8">
+  <div class="card">
+    <img src="Kucing 9.gif" class="kucing fade">
+    <hr>
+    <h3>Kartun favorit aku apaaa ayooo, masa lupaaa, tebak donggggg😗😗😗</h3>
+    <input type="text" id="guessKartun" placeholder="Tulis nama kartunnya...">
+    <br>
+    <button onclick="cekKartun()">Tebak</button>
+    <p id="hasilKartun"></p>
+    <button id="btn8" style="display:none" onclick="goToPage(9)">
+      Semoga kamu suka sama kartun ini yaaaaaa, biar kita bisa nobar, dan menurunkan minat yang kita suka keanak anak kita, yaitu doraemonnnn🤣🤣🤣, Okeh ayo lanjuttt
+    </button>
+    <hr>
+  </div>
+</div>
+
+<!-- HAL 9 -->
+<div class="page" id="page9">
+  <div class="card">
+    <img src="Kucing 10.gif" class="kucing fade">
+    <hr>
+    <h3>Kata kata yang sering kamu omongin ke aku apa hayoooo, kalo aku abis ngasih sesuatu kekamu😄😄😄</h3>
+    <input type="text" id="guessKata" placeholder="Kata katanya apa...">
+    <br>
+    <button onclick="cekKata()">Tebak</button>
+    <p id="hasilKata"></p>
+    <button id="btn9" style="display:none" onclick="goToPage(10)">
+      Aseeekkkk, ayo lanjuttt yaaaa sayangku cintaku yang gembrot dan suka brat bret brot dimana waeee😭😭😭
+    </button>
+    <hr>
+  </div>
+</div>
+
+<!-- HAL 10 -->
+<div class="page" id="page10">
+  <div class="card">
+    <img src="Kucing 11.gif" class="kucing fade">
+    <hr>
+    <h3>Tempat pertama kita ketemu dimana hayooo, masa gk ingett</h3>
+    <input type="text" id="guessPondok" placeholder="Tulis nama tempatnya...">
+    <br>
+    <button onclick="cekPondok()">Tebak</button>
+    <p id="hasilPondok"></p>
+    <button id="btn10" style="display:none" onclick="goToPage(11)">
+      Ayo lanjut, masa weee kalo ini kamu lupa gembroott sayangkuuuu🤍
+    </button>
+    <hr>
+  </div>
+</div>
+
+<!-- HAL 11 -->
+<div class="page" id="page11">
+  <div class="card">
+    <img src="Foto Pertama.jpeg" id="foto11" style="width:220px; border-radius:10px; opacity:0; transition:opacity 1s; margin-bottom:20px;">
+    <p id="text11-1"></p>
+    <p id="text11-2"></p>
+    <p id="text11-3"></p>
+    <p id="text11-4"></p>
+    <p id="text11-5"></p>
+    <p id="text11-6"></p>
+    <p id="text11-7"></p>
+    <p id="text11-8"></p>
+    <p id="text11-9"></p>
+    <button id="btn11" style="display:none" onclick="goToPage(12)">
+      Makasih ya sayangku, ayo lanjut🤍
+    </button>
+  </div>
+</div>
+
+<!-- HAL 12 -->
+<div class="page" id="page12">
+  <div class="card">
+    <img src="Foto Kedua belas.jpeg" id="foto12" style="width:220px; border-radius:10px; opacity:0; transition:opacity 1s; margin-bottom:20px;">
+    <p id="text12-1"></p>
+    <p id="text12-2"></p>
+    <p id="text12-3"></p>
+    <p id="text12-4"></p>
+    <p id="text12-5"></p>
+    <p id="text12-6"></p>
+    <p id="text12-7"></p>
+    <p id="text12-8"></p>
+    <p id="text12-9"></p>
+    <button id="btn12" style="display:none" onclick="goToPage(13)">
+      Ayo lanjut lagi sayang🤍
+    </button>
+  </div>
+</div>
+
+<!-- HAL 13 -->
+<div class="page" id="page13">
+  <div class="card">
+    <img src="Foto Kedelapan.jpeg" id="foto13" style="width:220px; border-radius:10px; opacity:0; transition:opacity 1s; margin-bottom:20px;">
+    <img src="Foto Kedua.jpeg" id="foto132" style="width:220px; border-radius:10px; opacity:0; transition:opacity 1s; margin-bottom:20px;">
+    <p id="text13-1"></p>
+    <p id="text13-2"></p>
+    <p id="text13-3"></p>
+    <p id="text13-4"></p>
+    <p id="text13-5"></p>
+    <p id="text13-6"></p>
+    <p id="text13-7"></p>
+    <p id="text13-8"></p>
+    <button id="btn13" style="display:none" onclick="goToPage(14)">
+      Lanjut lagi sayangku yang gembrottt, jangan bosenn ya sayangkuuuu🤍
+    </button>
+  </div>
+</div>
+
+<!-- HAL 14 -->
+<div class="page" id="page14">
+  <div class="card">
+    <img src="Foto Kesebelas.jpeg" id="foto14" style="width:220px; border-radius:10px; opacity:0; transition:opacity 1s; margin-bottom:20px;">
+    <p id="text14-1"></p>
+    <p id="text14-2"></p>
+    <p id="text14-3"></p>
+    <p id="text14-4"></p>
+    <p id="text14-5"></p>
+    <p id="text14-6"></p>
+    <p id="text14-7"></p>
+    <p id="text14-8"></p>
+    <p id="text14-9"></p>
+    <button id="btn14" style="display:none" onclick="goToPage(15)">
+      Ayo lagi lagi lagi lagi eheheheeheee, maaf yaaa sayangkuuuu kalo kepanjangan eheheeee🤍
+    </button>
+  </div>
+</div>
+
+<!-- HAL 15 -->
+<div class="page" id="page15">
+  <div class="card">
+    <img src="Foto Keempat.jpeg" id="foto15" style="width:220px; border-radius:10px; opacity:0; transition:opacity 1s; margin-bottom:20px;">
+    <p id="text15-1"></p>
+    <p id="text15-2"></p>
+    <p id="text15-3"></p>
+    <p id="text15-4"></p>
+    <p id="text15-5"></p>
+    <p id="text15-6"></p>
+    <button id="btn15" style="display:none" onclick="goToPage(16)">
+      Ini juga masih lanjut sihh, maaf ya sayangkuu🤍
+    </button>
+  </div>
+</div>
+
+<!-- HAL 16 -->
+<div class="page" id="page16">
+  <div class="card">
+    <img src="Foto Ketujuh Belas.jpeg" id="foto16" style="width:220px; border-radius:10px; opacity:0; transition:opacity 1s; margin-bottom:20px;">
+    <p id="text16-1"></p>
+    <p id="text16-2"></p>
+    <p id="text16-3"></p>
+    <p id="text16-4"></p>
+    <p id="text16-5"></p>
+    <p id="text16-6"></p>
+    <button id="btn16" style="display:none" onclick="goToPage(17)">
+      Lanjut lagi gak nihhhh, liat aja weee yaaaaaa eehheheheheheehehe🤍🤍
+    </button>
+  </div>
+</div>
+
+<!-- HAL 17 -->
+<div class="page" id="page17">
+  <div class="card">
+    <img src="Foto Ketujuh.jpeg" id="foto17" style="width:220px; border-radius:10px; opacity:0; transition:opacity 1s; margin-bottom:20px;">
+    <p id="text17-1"></p>
+    <p id="text17-2"></p>
+    <p id="text17-3"></p>
+    <p id="text17-4"></p>
+    <p id="text17-5"></p>
+    <p id="text17-6"></p>
+    <button id="btn17" style="display:none" onclick="goToPage(18)">
+      Masih mau lanjut gakkk??????, tap aja we yaaa😄😄
+    </button>
+  </div>
+</div>
+
+<!-- HAL 18 -->
+<div class="page" id="page18">
+  <div class="card">
+    <img src="Foto Ketiga Belas.jpeg" id="foto18" style="width:220px; border-radius:10px; opacity:0; transition:opacity 1s; margin-bottom:20px;">
+    <p id="text18-1"></p>
+    <p id="text18-2"></p>
+    <p id="text18-3"></p>
+    <p id="text18-4"></p>
+    <p id="text18-5"></p>
+    <p id="text18-6"></p>
+    <p id="text18-7"></p>
+    <p id="text18-8"></p>
+    <p id="text18-9"></p>
+    <button id="btn18" style="display:none" onclick="goToPage(19)">
+      Dikit lagi ini beneran, sabar ya sayangkuuuu😄😄
+    </button>
+  </div>
+</div>
+
+<!-- HAL 19 -->
+<div class="page" id="page19">
+  <div class="card">
+    <img src="Foto Kelima Belas.jpeg" id="foto19" style="width:220px; border-radius:10px; opacity:0; transition:opacity 1s; margin-bottom:20px;">
+    <p id="text19-1"></p>
+    <p id="text19-2"></p>
+    <p id="text19-3"></p>
+    <p id="text19-4"></p>
+    <p id="text19-5"></p>
+    <p id="text19-6"></p>
+    <p id="text19-7"></p>
+    <p id="text19-8"></p>
+    <p id="text19-9"></p>
+    <button id="btn19" style="display:none" onclick="goToPage(20)">
+      Nahhhh ini udah deket deket endingg nihh,tap dulu yaaaa gembrooottt☺️☺️☺️
+    </button>
+  </div>
+</div>
+
+<!-- HAL 20 -->
+<div class="page" id="page20">
+  <div class="card">
+    <img src="Foto Keenam Belas.jpeg" id="foto20" style="width:220px; border-radius:10px; opacity:0; transition:opacity 1s; margin-bottom:20px;">
+    <p id="text20-1"></p>
+    <p id="text20-2"></p>
+    <p id="text20-3"></p>
+    <p id="text20-4"></p>
+    <p id="text20-5"></p>
+    <p id="text20-6"></p>
+    <p id="text20-7"></p>
+    <p id="text20-8"></p>
+    <p id="text20-9"></p>
+    <p id="text20-10"></p>
+    <p id="text20-11"></p>
+    <p id="text20-12"></p>
+    <p id="text20-13"></p>
+    <p id="text20-14"></p>
+    <p id="text20-15"></p>
+    <button id="btn20" style="display:none" onclick="goToPage(21)">
+      Ini beneran nih dah mau ending pisan aseelliiiii😄😄
+    </button>
+  </div>
+</div>
+
+<!-- HAL 21 -->
+<div class="page" id="page21">
+  <div class="card">
+    <img src="Foto Ketiga.jpeg" id="foto21" style="width:220px; border-radius:10px; opacity:0; transition:opacity 1s; margin-bottom:20px;">
+    <p id="text21-1"></p>
+    <p id="text21-2"></p>
+    <p id="text21-3"></p>
+    <p id="text21-4"></p>
+    <p id="text21-5"></p>
+    <p id="text21-6"></p>
+    <p id="text21-7"></p>
+    <p id="text21-8"></p>
+    <button id="btn21" style="display:none" onclick="goToPage(22)">
+      Nahhhh akhirnya udah mau dipenghujung nihhh, tapp ya sayangkuuuu🤍
+    </button>
+  </div>
+</div>
+
+<!-- HAL 22 (BARU & BERSIH) -->
+<div class="page" id="page22">
+  <div class="card page22">
+
+    <!-- ITEM 1 (KANAN FOTO, KIRI TEKS) -->
+    <div class="item22 right"
+         data-text="Haaiii nduuttt Kamu gimanaa kabarnya sekarang?😄 Udah bahagia lagi?😊 Atau masih bingung sama perasaan kamu?  Ingettt gakk dulu, padahal dulu kamu paling gampang loh buat ngeluarin emosi yang ada dalam diri kamu, kayak nangiss, kesell, maraahh, senengg, bahagiaaa dan masih banyak lagii, dulu kalo kamu lagi seneng biasanya suka manggil aku temboll🤣🤣, aku gak ngerti maksudnya apa sebenernya, tapi ya seneng aja dipanggil itu sama kamu😄😁, jangan kaget yaaa kalo banyak foto foto kamu muncul disini, itu tuh sebagian foto foto kamu yang jadj favorit aku eheheheheeee😂😂😂"
+         data-images="ada 2.jpeg,ada 6.jpeg">
+    </div>
+
+    <!-- ITEM 2 (KIRI FOTO, KANAN TEKS) -->
+    <div class="item22 left"
+         data-text="Ehhhh lupaaa, selamat tahun baruuu ndutku sayangkuu🥳🥳🥳, ehhh udah ya tadi di awal, gapapa dengg, semogaaa di tahun ini banyak hal hal baik buat kita, terutama kamu yaaaa, semogaaa kamu bisa lebih bahagia dari pada tahun kemarinnn, semogaaaaa apa yang kamu harapkan terwujudd, semoggaaaa apa yang kamu usahain tercapaii yaaa, semogaa jadi psikolog yang suksess aamiin😘😘😘, semogaa keadaan keluarga kamu lekas membaik yaaa, dan hubungan kita juga mereeuunn😂😄, semoga apa yang kamu semogakan tersemogakan we aja yaaaaaaa"
+         data-images="ADA 1.jpeg,ada 3.jpeg">
+    </div>
+
+    <!-- ITEM 3 -->
+    <div class="item22 right"
+         data-text="Ingett gakk kamu, waktu aku pertama kali nembak kamu🤣🤣🤣, aduhh aya aya wae jadi malu juga, kamu gk ngeh waktu itu suara aku gemeter, tangan aku gemeter🤣🤣🤣, terus pas pulang dari kamu aku liat spion aku terus, liatin kamu huhuhuhuhu😅😅, jago ya modus aku dulu, biar kamu klepek klepek ke aku 🤣🤣🤣, mana baru berapa bulan ning aku langsung berani chat ibu kamu buat minta izin mainn🤣🤣🤣, aya aya wae gembrooott gembroott"
+         data-images="Ada 4.jpeg,ADA 5.jpeg">
+    </div>
+
+    <!-- ITEM 4 (KIRI FOTO, KANAN TEKS) -->
+    <div class="item22 left"
+         data-text="Terus inget gakk waktu kelulusann, kamu bilang byee cevii🙃🙃, aku teh langsung deg degan, bayangin kamu belum punya aku aja, udah se deg degan itu mau perpisahan dari kamu😅😅, makanya aku langsung sat set ehehehee😄😄, aku liat waktu itu kamu teh pulang bareng ibu kamu, abis magrhib aku liat kamu nyebrang dari gerbang pondok ke arah mas gimin eheheee🤣🤣🤣"
+         data-images="ADA 8.jpeg,Ada 81.jpeg">
+    </div>
+
+    <!-- ITEM 5 -->
+    <div class="item22 right"
+         data-text="Abis itu aku langsung chat firyal pas dimobil, huhuhuuu😅😂, aku inget waktu deket masjid waktu apa tuh yang ngajar di kelas lupa namanya, kita teh berpapasan disamping masjid, nah ada kamu sama firyal, si firyal teh langsung kekamu, ngeledekin gitu kalo ada aku, inget gakk, gak tau aku salah tangkep🙃, tapi da se inget aku gitu hehehee😂"
+         data-images="ada 91.jpeg,ADA 9.jpeg">
+    </div>
+
+    <!-- ITEM 6 (KIRI FOTO, KANAN TEKS) -->
+    <div class="item22 left"
+         data-text="Ingett gakk, modus waktu bukber, harusnya aku nganter si ebi, tapi males aku pengennya sama kamu🤣🤣🤣, gembroott aya aya waeee, modus ngasihin hadiah dari siapa tuh, aku kasihin kekamu aja😂😂, terus buku novel kamu, da bukan sama aku hilangnya, sama si rifqi😒, tapi ngadon nyalahin akuu😞😞, padahal aku udah bilang kekamu novel itu buat aku yaaa🤣🤣🤣, kamunya cuman apa ya da ngomong langsung ngaleos🤣🤣🤣, oohhh iya aku doain kamu, kalo ujian PPKN bisa dapet 100 kayak aku aamiin"
+         data-images="ADA 72.jpeg,ADA 73.jpeg">
+    </div>
+
+    <!-- ITEM 7 -->
+    <div class="item22 right"
+         data-text="Aku banyak modusnya yaaa🤣🤣🤣, modus buat nembak kamu dengan cara nitipin kaos kaki😂😂😅, bari dipikir pikir, kalo jadi ftv kayaknya cintaku berlabuh karena kaos kaki tertinggal di dermaga🤣🤣🤣, konyoll konyoll aya aya waeee"
+         data-images="ADA 21.jpeg,ADA 22.jpeg">
+    </div>
+
+    <!-- ITEM 8 (KIRI FOTO, KANAN TEKS) -->
+    <div class="item22 left"
+         data-text="Ingettt gaakk, waktu kita main kemana yaa, aku hampir nabrak anak kecil teh, da bareng kamuu🙃, oohhh iyaaa waktu mau ke tahuraa, abis dari pondokkk, kamu kan ikut acara pondok dulu, udahnya kita teh langsung main ke tahura ning, ehhh iya kan, iyaaa benerrr udahnya kita beli ramen kan di transmart🤣🤣🤣, kalo gak salah, waktu itu kamu masih malu malu jaim dan baik hati, tak macam sekarang, candaaa eheheheeee😂, kalo inget dulu yaaa, rasa cinta kita sama sama setara, jadi asa bahagiaa, gak tau deng kalo kamu🙃"
+         data-images="ADA 23.jpeg,ADA 24.jpeg">
+    </div>
+
+    <!-- ITEM 9 -->
+    <div class="item22 right"
+         data-text="Terus inget gakk, waktu kita main ke braga☺️🤣☺️🤣🤣, yang kata aku ayoo muter kesana ada jalan🤣🤣, ehh ning gk ada jalan malah jauh pisan, aseli itu aku malu pisan, gk kayak sekarang, bener dehh, harga diri aku asa merosottttt tajamm kedasar bumi yang paling dalam😭😭😭, konyolnya, terus ouuhh iyaa donat mahall aduuhh😭😭😭, konyol demi biar keliat nih gentle nraktirr😭😭, konyoll aya aya waeeee, padahal mah dompet merana😭😭😭"
+         data-images="ADA 25.jpeg,ADA 26.jpeg">
+    </div>
+
+    <!-- ITEM 10 (KIRI FOTO, KANAN TEKS) -->
+    <div class="item22 left"
+         data-text="Sering ternyata ya kita main, padahal asa jarang, ehh jarang deng😭😭, tapi kita kan pernah ke ciwalk yaa, terus mall apa tuh pvj bukan, lupa🙃🙃, cuman liat liat aja wee gak beli da mahal, teruss tiap main ke time zone aku langganan dipijit pake kursi pijit aduuhh😭😭😭, dasar remaja jompo aya aya wae, kamuuu🤣🤣🤣🤣"
+         data-images="ada 27.jpeg,ada 28.jpeg">
+    </div>
+
+    <!-- ITEM 11 -->
+    <div class="item22 right"
+         data-text="Kalo tiap di motorr, kamu suka peluk aku sambil goyang goyang, sambil mainin tali jeket akuu, sambil mainin kancing kemeja akuu, sambil ngomong bul tak kembol kembol tak kembol kembol😅😅, aya aya waee, terus kamu mau jatoh lagi di pom bensin, bukan mau emang jatohhh, asa pom bensin ya tempat yang sering kita kunjungin bareng bareng, kalo dipikir pikir, soalnya kamu mau pipiss🙃, konyoll aya aya waee, kangen yaa gening seru juga kita duluu🙃🙃"
+         data-images="ada 29.jpeg,ada 30.jpeg">
+    </div>
+
+    <!-- ITEM 12 (KIRI FOTO, KANAN TEKS) -->
+    <div class="item22 left"
+         data-text="Dulu ya, waktu semester 1 aku masih inget waktu cinta aku masih menggebu gebu heheheeee, yang aku nganter kamu pulang wae gratis gk bayar, terus apa yaaa, nraktir yaa, yaaaa full effort ya dulu akuu waktu awal awal, naik semester 2 wee aku gk biss ngontrol pikiran akuu, maafin aku ya sayangkuu"
+         data-images="ada 31.jpeg,ada 32.jpeg">
+    </div>
+
+    <!-- ITEM 13 -->
+    <div class="item22 right"
+         data-text="Sekarang gimana keadaan kamu tanpa aku? Apa lebih bahagia?😄 Semoga lebih bahagia yaaa, aku juga udah sadar sama semua kelakuan aku, sama semua kesalahan aku, aku juga gak mau liat kamu sedih lagi terus, (padahal mah kalo kamu nangis aku suka ledekin🤣🤣🤣), kalo kamu udah ngerasa gak cocok mungkin sama aku, gapapaa yaaa, semoga ada laki laki lain yang bisa lebih baik ngeperlakuin kamu dari pada aku, aku doain juga semoga kehidupan kamu selanjutnya lebih bahagia yaaa."
+         data-images="ada 33.jpeg,ada 34.jpeg">
+    </div>
+
+    <!-- ITEM 14 (KIRI FOTO, KANAN TEKS) -->
+    <div class="item22 left"
+         data-text="Sejauh ini aku masih naruh harapan kekamu, walaupun kamu mungkin gak percaya lagi ke aku, tapi coba denger lagu yang aku puter ini buat kamu, coba dehh pahamin maknanya ehehee😅😅"
+         data-images="ada 35.jpeg,ada 36.jpeg">
+    </div>
+
+    <!-- ITEM 15 -->
+    <div class="item22 right"
+         data-text="Sejauh ini dari kita pisah sampe sekarang, ya kehidupan aku gini aja🤣🤣, kayak yaudah udah gk ada tujuan hidup lagi😄😄, tapi gapapa kookkk, kamu jangan merasa bersalah yaaaa intinya ya gitu aja weee yaaaa, jangan lupa bahagia, jangan sesalin pilihan kamu kedepannya yaaa😅, jangan sampe salah pilih jugaa (semoga pilih aku😋😋😋), candaa cuman ya kalo emang kamu mau balik lagi juga gapapa, aku usahain buat bahagiain kamu, gk akan bikin kamu sedih karena kelakuan dan sikap aku lagi, maafin aku ya sayangkuuu"
+         data-images="ada 37.jpeg,ada 38.jpeg">
+    </div>
+
+    <!-- ITEM 16 (KIRI FOTO, KANAN TEKS) -->
+    <div class="item22 left"
+         data-text="Seandainya nanti kita gak bisa bareng lagi, aku masih disini kokk😁😁, aku masih bisa buat jadi tempat kamu singgah, tempat kamu ceritaa😄😄, seandainya ternyata cowo pengganti aku itu lebih buruk dari aku, gapapa kamu cerita ke aku aja yaaa, kita cari jalan keluarnya, gapapa kamu mau nyari sosok ayah di diri aku, anggap aja aku kayak ayah kamu kalo kamu lagi kesusahan, pasangan kamu kalo kamu lagi kebingungan, temen kamuu kalo kamu lagi butuh kehangatan, yaaa jangan karna status kita mantan kamu jadi canggung eheheheeee😊😊."
+         data-images="ada 39.jpeg,ada 40.jpeg">
+    </div>
+
+    <!-- ITEM 17 -->
+    <div class="item22 right"
+         data-text="Kalo seandainya aku pergi dan hilang, tapi ternyata kamu masih liat ada secercah harapan buat bareng aku lagi, tolong cari aku yaa😊😊, bujuk aku, paksa aku buat perbaiki semuanyaa😊😊, aku harap yang terbaik buat kamu, jangan sedih terus yaaaa☺️☺️, karna kejadian ini juga aku sadar peran seorang pasangan itu harus gimana, kewajiban dan hak hak yang harus aku kasih kekamu itu apa, sekarang aku ngerti itu semua, maafin aku yang dulu ya sayangku, aku yang tahun kemarin gk akan datang lagi kokk, jadi jangan takut yaaa."
+         data-images="ada 41.jpeg,ada 42.jpeg">
+    </div>
+
+    <!-- ITEM 18 (KIRI FOTO, KANAN TEKS) -->
+    <div class="item22 left"
+         data-text="Ohhhh iya aku minta 1 hal, kamu ayo ke psikolog yaaa, ceritain semuanya jangan ada yang kamu tutupin, nanti aku anter deh kesananya, aku gak bisa bantu kesembuhan kamu, tapi aku pasti temenin kamu sampe kamu sembuh yaaa😊😊😊"
+         data-images="ada 43.jpeg,ada 44.jpeg">
+    </div>
+
+    <!-- ITEM 19 -->
+    <div class="item22 right"
+         data-text="Udah yaaa, ini terakhir hehheeee, jangan lupa bahagia, semoga cita cita kamu semuanya tercapai, jangan ngulangin masa masa kelam kamu yang dulu lagii yaaa, jangan ngasih full effort kalo pasangan kamu juga gk ngasih effort yang setara yaaaa, tapi harus saling ngertiin juga seandainya pasangan kamu cape, jangan terlalu dipaksa yaa, tapi kalo dia pengangguran dan diem doang, terus cuekk, wajar itu mah (wajib di hajar😂🤣🤣🤣), udahh yaaa jangan sedih lagii, Cepet sembuh ya sayangkuu, cintakuu, genduttkkuu, baweellkuuu, kebahagiaankuuu eheheeee😘😘. Jangan banyak typo kalo ngomong sama ngedenger upss🤭🤭"
+         data-images="ada 45.jpeg,ada 46.jpeg">
+    </div>
+
+    <!-- ITEM 20 (KIRI FOTO, KANAN TEKS) -->
+    <div class="item22 left"
+         data-text="oohhh iyaaa, utamain kebahagiaan kamu dulu yaa sayangkuuuu🤍, kalo misal kamu udah punya cowo lagi,jangan lupa ajak dan paksa dia buat bicarain tentang hubungan secara 4 mata yaa, jangan virtual takutnya kayak hubungan kita huuuuuuu🙃🙃🙃"
+         data-images="ada 47.jpeg,ada 48.jpeg">
+    </div>
+
+    <!-- ITEM 21 -->
+    <div class="item22 right"
+         data-text="Kamu selalu dan pasti ada di hati aku, boleh kembali kalo kamu udah yakin sama keputusan kamu itu yaa, aku pasti selalu ada di belakang kamu, dan jangan takut ada orang yang cemburu karna kamu, karna aku janji aku gak akan nyari pengganti kamu, love you sayangkuu🤍"
+         data-images="ADA 7.jpeg,ADA 11.jpeg">
+    </div>
+
+    <!-- tombol -->
+    <button id="btn22" style="display:none" onclick="goToPage(23)">
+      Lanjut ya sayangku 🤍
+    </button>
+
+  </div>
+</div>
+
+
+<!-- PAGE 23 : PESAN UNTUK AKU -->
+<div class="page" id="page23">
+  <div class="letter">
+    <h2>Sesuatu yang pengen kamu omongin buat aku 🤍</h2>
+    <p class="hint">
+      Ketik yaa, bebas mau unek unek kamu yang belum kesampein ke aku juga bolehh kok 😊😊😊<br>
+      Nanti Aku bakal baca pelan-pelan da biar aku paham sama yang kamu rasain dari aku ehehehee😅😅😅.
+      Jangan dulu keluar, tunggu sampe bener bener terkirim, kalo gak tar error ehehehee😅😅
+    </p>
+
+    <div class="typing-wrap">
+      <span class="pencil">✏️</span>
+      <textarea id="pesanDia" placeholder="Tulis di sini ya sayangkuuuu🤍..."></textarea>
+    </div>
+
+    <button id="btnKirim" onclick="kirimPesan()">Kirim 💌</button>
+
+    <p id="statusKirim"></p>
+
+    <!-- surat animasi -->
+    <div id="envelope">💌</div>
+
+    <!-- penutup -->
+    <p id="penutup">
+      Makasih ya udah mau buka link ini, dan ngikutin step sampe akhirr😅😅<br>
+      Semoga hati kamu lekas membaik, jangan sedih terus ya sayangkuuuu🤍
+    </p>
+    <button id="btn23" style="display:none" onclick="goToPage(24)">
+      Aseeek udah beress nihh, coba tap lagi dong🤍
+    </button>
+  </div>
+</div>
+
+<!-- PAGE 24 : PENUTUP -->
+<div class="page" id="page24">
+  <div class="card" style="align-items:center;">
+
+    <!-- FOTO PENUTUP -->
+    <img src="ADA 100.jpeg" id="foto24"
+      class="reveal"
+      style="width:220px; border-radius:16px; margin-bottom:26px;">
+
+    <!-- JUDUL BESAR -->
+    <h1 id="thankTitle"
+      style="font-family:'Pacifico';
+             font-size:42px;
+             color:#A87C7C;
+             margin:10px 0 18px;">
+      Terima Kasih Sayangku, Bawelku, Cintaku, Gembrotku, Gendutku 🤍
+    </h1>
+
+    <!-- PESAN PENUTUP -->
+    <p id="text24-1"></p>
+    <p id="text24-2"></p>
+    <p id="text24-3"></p>
+
+    <!-- TOMBOL EXIT -->
+    <button onclick="goToPage(25)"
+      style="margin-top:26px;">
+      Kalo udah selesai tap ini aja yaa🤍
+    </button>
+
+  </div>
+</div>
+
+<!-- HAL 25 : CREDIT SCENE - FIXED -->
+<div class="page" id="page25">
+  <div class="credit-container">
+    <!-- Foto di atas (SIMPLE, NO ABSOLUTE) -->
+    <img src="MANTAP.jpeg" id="creditFoto" class="credit-foto">
+    
+    <!-- HANYA SATU CONTAINER UNTUK SCROLL -->
+    <div class="credit-text-container" id="creditTextsContainer">
+      <!-- Teks akan dimasukkan via JavaScript -->
+    </div>
+    
+    <!-- Ending Love -->
+    <div id="endingLove" class="ending-love">
+      <div class="love-emoji">🤍</div>
+      <div class="love-text">Love You</div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+const music=document.getElementById("bgMusic");
+
+/* FADE */
+function showFade(page){
+  const items = document.querySelectorAll(`#page${page} .fade`);
+  items.forEach((el,i)=>{
+    setTimeout(()=>el.classList.add("show"), i*350);
+  });
+
+  // tombol otomatis hanya untuk page 1 & 4
+  if(page === 1 ){
+    setTimeout(()=>{
+      const btn = document.getElementById(`btn${page}`);
+      if(btn) btn.style.display = "inline-block";
+    }, items.length*350 + 300);
+  }
+}
+
+/* TYPE */
+function typeText(el,text,speed=45,done){
+  el.innerHTML="";
+  let i=0;
+  const t=setInterval(()=>{
+    el.innerHTML+=text.charAt(i++);
+    if(i>=text.length){
+      clearInterval(t);
+      if(done) done();
+    }
+  },speed);
+}
+
+/* KE OPENING */
+function toOpening(){
+  if(music.paused) music.play().catch(()=>{});
+
+  page1.classList.remove("active");
+  opening.classList.add("active");
+
+  const gif=document.getElementById("openingGif");
+  const text=document.getElementById("openingText");
+  const btn=document.getElementById("btnOpening");
+
+  gif.classList.remove("show");
+  text.innerHTML="";
+  btn.style.display="none";
+
+  setTimeout(()=>gif.classList.add("show"),300);
+
+  setTimeout(()=>{
+    typeText(
+      text,
+      "Selamat tahun baruuuu🥳🥳🥳, semoga ditahun ini banyak hal-hal baik buat kita yaa, terkhususnya buat diri kamu sendiri, nanti deh aku cerita di akhir tentang semuanya, sekarang mah lanjut dulu ya sayangkuuuu, maaf kalo disini banyak manggil sayang walaupun kamu udah bukan siapa siapa aku heheheheheheheeee😅😅😅, lanjut dulu aja dehh ayooo",
+      45,
+      ()=>btn.style.display="inline-block"
+    );
+  },1400);
+}
+
+/* GAME 1 */
+const tanggalBenar=10; // GANTI YA
+
+function cekTanggal(){
+  const input=document.getElementById("guessTanggal").value;
+  const hasil=document.getElementById("hasilTanggal");
+  const btn=document.getElementById("btn2");
+
+  if(input==tanggalBenar){
+    hasil.innerHTML="Aseekkk masih inget kamuuu, kirain udah lupaaaaaa😄😄😄";
+    hasil.style.color="#4b5f55";
+    btn.style.display="inline-block";
+  }else{
+    hasil.innerHTML="Hehe salah 🤭 coba lagi ya gembroott";
+    hasil.style.color="red";
+    btn.style.display="none";
+  }
+}
+
+/* GAME 2 */
+function cekTempat() {
+    const jawabanBenar = [
+        "alun alun bandung",
+        "alun-alun bandung",
+        "alun alun",
+        "alunalun bandung",
+        "braga"
+    ];
+
+    const tebakan = document.getElementById("guessTempat").value
+        .toLowerCase()
+        .trim();
+
+    const hasil = document.getElementById("hasilTempat");
+    const btn = document.getElementById("btn3");
+
+    if (jawabanBenar.includes(tebakan)) {
+        hasil.innerHTML = "Aseeekkkk benerrr, masih inget juga ya kamu, gimana gk inget kita dulu dikit dikit kesini, kalo main kesini, sangat terkenang ya tempatnya, semoga kalo kita jodoh aku pengen ini tempat jadi latar foto buat diprewedding kita heheheheee😘😘😘";
+        hasil.style.color = "#4b5f55";
+        btn.style.display = "inline-block"; // tombol muncul
+    } else {
+        hasil.innerHTML = "❌ Masaaa lupaaa lagiiii aduuuhhhhh gembroottt aya aya waeee😭";
+        hasil.style.color = "red";
+        btn.style.display = "none"; // tombol disembunyikan
+    }
+}
+
+/* GAME 3 */
+function cekMakanan() {
+    const jawabanBenar = [
+        "Ramen",
+        "ramen",
+        "mie",
+        "Mie ayam",
+        "mie ayam",
+        "Mie Ayam",
+        "Mie"
+    ];
+
+    const tebakan = document.getElementById("guessMakanan").value
+        .toLowerCase()
+        .trim();
+
+    const hasil = document.getElementById("hasilMakanan");
+    const btn = document.getElementById("btn4");
+
+    if (jawabanBenar.includes(tebakan)) {
+        hasil.innerHTML = "Eheheheheheeee, aku kurang kurangin deeeehh, biar kamu gk khawatir terusss😅😅😅";
+        hasil.style.color = "#4b5f55";
+        btn.style.display = "inline-block"; // tombol muncul
+    } else {
+        hasil.innerHTML = "❌ Gapapa lupa juga, ayo coba tebak lagi, hal yang dulu biasa kamu larang larang ke akuu😅";
+        hasil.style.color = "red";
+        btn.style.display = "none"; // tombol disembunyikan
+    }
+}
+/* GAME 4 */
+const HariBenar=28; // GANTI YA
+
+function cekHari(){
+  const input=document.getElementById("guessHari").value;
+  const hasil=document.getElementById("hasilHari");
+  const btn=document.getElementById("btn5");
+
+  if(input==HariBenar){
+    hasil.innerHTML="Aseekkk bener juga ya kamuuu, kayaknya ini search google deh jawabannyaa, ternyata umur kita gk jauh yaa gembrotku yang cantikk, ternyata tuaan kamu hehehehehehehee😄😄😄";
+    hasil.style.color="#4b5f55";
+    btn.style.display="inline-block";
+  }else{
+    hasil.innerHTML="Hehe salah 🤭 coba lagi ya gembroott, ini agak susah sihhhh, tapi gpp buat melatih otak hohohohoo🤭🤭🤭";
+    hasil.style.color="red";
+    btn.style.display="none";
+  }
+}
+
+/* GAME 5 */
+const IkanBenar=6; // GANTI YA
+
+function cekIkan(){
+  const input=document.getElementById("guessIkan").value;
+  const hasil=document.getElementById("hasilIkan");
+  const btn=document.getElementById("btn6");
+
+  if(input==IkanBenar){
+    hasil.innerHTML="Aseekkkk bener juga kamu, kayaknya ini nebak nebak deh kamu, aku ge nginget ngingetnya agak susah aduhhhh😄😄😄";
+    hasil.style.color="#4b5f55";
+    btn.style.display="inline-block";
+  }else{
+    hasil.innerHTML="Hehe salah 🤭 coba lagi ya gembroott, ini agak susah sihhhh, tapi gpp buat melatih otak dan ingatan kamu heheheeee";
+    hasil.style.color="red";
+    btn.style.display="none";
+  }
+}
+
+/* GAME 6 */
+const LahirCeviBenar=25; // GANTI YA
+
+function cekLahirCevi(){
+  const input=document.getElementById("guessLahirCevi").value;
+  const hasil=document.getElementById("hasilLahirCevi");
+  const btn=document.getElementById("btn7");
+
+  if(input==LahirCeviBenar){
+    hasil.innerHTML="Aseekkkk masih inget kamuuuu, ternyata kamu masih sayang akuuu yaaaa ehehehehee😄😄😄, becanda becanda jangan ngambekk ayo lanjut lanjutttt, jangan diclose dong ya eheheheheee😅😅😅";
+    hasil.style.color="#4b5f55";
+    btn.style.display="inline-block";
+  }else{
+    hasil.innerHTML="Hehe salah 🤭 coba lagi ya gembroott, gapapa lupa juga, ayo inget inget tanggal 20an ke atass cluenya";
+    hasil.style.color="red";
+    btn.style.display="none";
+  }
+}
+
+/* GAME 7 */
+function cekKartun() {
+    const jawabanBenar = [
+        "Doraemon",
+        "doraemon",
+    ];
+
+    const tebakan = document.getElementById("guessKartun").value
+        .toLowerCase()
+        .trim();
+
+    const hasil = document.getElementById("hasilKartun");
+    const btn = document.getElementById("btn8");
+
+    if (jawabanBenar.includes(tebakan)) {
+        hasil.innerHTML = "Mantap nyohhhh, kirain kamu lupa sama hal yang aku suka uhuhuhuhuhuhuhuuu😭😭😭";
+        hasil.style.color = "#4b5f55";
+        btn.style.display = "inline-block"; // tombol muncul
+    } else {
+        hasil.innerHTML = "❌ Gapapa lupa jugaaa, cluenya komik yang aku beli apa hayooo🤭🤭🤭";
+        hasil.style.color = "red";
+        btn.style.display = "none"; // tombol disembunyikan
+    }
+}
+
+/* GAME 8 */
+function cekKata() {
+    const jawabanBenar = [
+        "Makasih ya sayangku cintaku",
+        "Makasih Ya Sayangku Cintaku",
+        "makasih ya sayangku cintaku",
+    ];
+
+    const tebakan = document.getElementById("guessKata").value
+        .toLowerCase()
+        .trim();
+
+    const hasil = document.getElementById("hasilKata");
+    const btn = document.getElementById("btn9");
+
+    if (jawabanBenar.includes(tebakan)) {
+        hasil.innerHTML = "Uuhuhuhuhuhuhuhuuu😭😭😭, jadi kangen masa masa waktu kita masih bareng eheheheheeeeee😄😄😄";
+        hasil.style.color = "#4b5f55";
+        btn.style.display = "inline-block"; // tombol muncul
+    } else {
+        hasil.innerHTML = "❌ Gapapa lupa jugaaa, cluenya aku hampir nangis waktu itu, kata katanya makasih ya blablablabla eheheeee😊😊😊";
+        hasil.style.color = "red";
+        btn.style.display = "none"; // tombol disembunyikan
+    }
+}
+
+/* GAME 9 */
+function cekPondok() {
+    const jawabanBenar = [
+        "Pondok",
+        "pondok",
+        "Pesantren",
+        "pesantren",
+        "Mathla'ul Huda",
+        "mathla'ul huda",
+    ];
+
+    const tebakan = document.getElementById("guessPondok").value
+        .toLowerCase()
+        .trim();
+
+    const hasil = document.getElementById("hasilPondok");
+    const btn = document.getElementById("btn10");
+
+    if (jawabanBenar.includes(tebakan)) {
+        hasil.innerHTML = "Masa weeeee lupa kalo ini gembrootttt, kamu bertahun tahun disini😂😂😂";
+        hasil.style.color = "#4b5f55";
+        btn.style.display = "inline-block"; // tombol muncul
+    } else {
+        hasil.innerHTML = "❌ AAAAAPPPPAAAAA, KAMUUUUU LLLUUUPPAAAA, COOOBBAAA IINNGGGGETTTT LLLAAAGGGIIII SSSEEEKKKOOOLLLAAAHHH KKKAAAMMMUU DDUUULLUUU😶😶😶";
+        hasil.style.color = "red";
+        btn.style.display = "none"; // tombol disembunyikan
+    }
+}
+
+/* HAL 11 ANIMASI */
+async function tampilkanPage11() {
+  const foto = document.getElementById("foto11");
+  const teks = [
+    "Makasihhh yaa buat semuanya 😘😘,",
+    "inget gak difoto itu, kalo gak salah itu waktu aku nganter kamu pulang dehhh, ataaauu nganter kamu berangkat aku lupaa😭😭.",
+    "Tapi aku masih ingett kok suasana saat ituu🥺🥺,",
+    "Pas dimana kamu masih excited buat ketemu aku,",
+    "Pas dimana kamu bangga banggain aku depan temen kamu,",
+    "Pas kamu pengeeennnn terus bareng akuuu😅😅,",
+    "Maafin aku yaaa, dulu mungkin karena aku ngerasa gk akan kehilangan kamu, dan banyak orang orang yang ngejar aku,",
+    "Jadi aku nyepelein kamu",
+    "Maafin aku ya sayangkuu☺️☺️☺️"
+  ];
+  const elemen = [
+    document.getElementById("text11-1"),
+    document.getElementById("text11-2"),
+    document.getElementById("text11-3"),
+    document.getElementById("text11-4"),
+    document.getElementById("text11-5"),
+    document.getElementById("text11-6"),
+    document.getElementById("text11-7"),
+    document.getElementById("text11-8"),
+    document.getElementById("text11-9")
+  ];
+  const tombol = document.getElementById("btn11");
+
+  foto.style.opacity = 1;
+  await new Promise(r => setTimeout(r, 1000));
+
+  for(let i=0;i<teks.length;i++){
+    await new Promise(resolve => { typeText(elemen[i], teks[i], 50, resolve); });
+    await new Promise(r => setTimeout(r, 300));
+  }
+
+  tombol.style.display = "inline-block";
+}
+
+/* HAL 12 ANIMASI */
+async function tampilkanPage12() {
+  const foto = document.getElementById("foto12");
+  const teks = [
+    "Foto itu photobox pertama kita yaaa😄😄,",
+    "Waktu itu kita sama sama bingung harus bergaya gimana🤣🤣,",
+    "Sama sama kakuuu,",
+    "Sama sama gk biasa difotooo, aya aya waeee aduh ieuuuu,",
+    "Kalo gak salah photobox itu sebelum kita masuk kuliah yaaa,",
+    "Abis itu kan kita main kemana sih yang keatas tuh aku lupa namanya😭😭, Tapi aku inget kok disana,",
+    "Tau gak, waktu itu tuh aku masih agak gemeter ngebonceng kamu,",
+    "Makanya banyak salah belok dan rem🤣🤣🤣😭😭,",
+    "Tapi sekarang mah aku udah jago, bisa sat set sot selap selip selop hehehee🤣🤣🤣."
+  ];
+  const elemen = [
+    document.getElementById("text12-1"),
+    document.getElementById("text12-2"),
+    document.getElementById("text12-3"),
+    document.getElementById("text12-4"),
+    document.getElementById("text12-5"),
+    document.getElementById("text12-6"),
+    document.getElementById("text12-7"),
+    document.getElementById("text12-8"),
+    document.getElementById("text12-9")
+  ];
+  const tombol = document.getElementById("btn12");
+
+  foto.style.opacity = 1;
+  await new Promise(r => setTimeout(r, 1000));
+
+  for(let i=0;i<teks.length;i++){
+    await new Promise(resolve => { typeText(elemen[i], teks[i], 50, resolve); });
+    await new Promise(r => setTimeout(r, 300));
+  }
+
+  tombol.style.display = "inline-block";
+}
+
+/* HAL 13 ANIMASI */
+async function tampilkanPage13() {
+  const foto1 = document.getElementById("foto13"); 
+  const foto2 =document.getElementById("foto132")
+  const teks = [
+    "Waktu itu kamu abis kuliah yaaa, terus kita mau nonton ning,",
+    "Tapi lupa nonton apa😭😭,",
+    "Kamu tuh gak suka sama foto itu kalo gak salah🤣🤣,",
+    "Karna difotonya pas kamu abis dari air sama lagi makan🤣🤣🤣🤣,",
+    "Jadi mulut kamu penuh,",
+    "Padahal mah da kata aku keliat cantik dan imut🤣🤣🤣,",
+    "Kamunya aja weee denial gak nyadar,",
+    "Aku mah sering bilang kamu cantik, aseeeqqq🤣🤣🤣🤣.",
+  ];
+  const elemen = [
+    document.getElementById("text13-1"),
+    document.getElementById("text13-2"),
+    document.getElementById("text13-3"),
+    document.getElementById("text13-4"),
+    document.getElementById("text13-5"),
+    document.getElementById("text13-6"),
+    document.getElementById("text13-7"),
+    document.getElementById("text13-8")
+  ];
+  const tombol = document.getElementById("btn13");
+
+  foto1.style.opacity = 1;
+  foto2.style.opacity = 1;
+  await new Promise(r => setTimeout(r, 1000));
+
+  for(let i=0;i<teks.length;i++){
+    await new Promise(resolve => { typeText(elemen[i], teks[i], 50, resolve); });
+    await new Promise(r => setTimeout(r, 300));
+  }
+
+  tombol.style.display = "inline-block";
+}
+
+/* HAL 14 ANIMASI */
+async function tampilkanPage14() {
+  const foto = document.getElementById("foto14");
+  const teks = [
+    "Ini sebenernya salah satu foto favorit akuuu😭😭🤣🤣,",
+    "Soalnya kita keliat kayak coouuuuccoouuk bangett eheheheee🤣,",
+    "Waktu itu tuh di griya kan ya,",
+    "Kita makan rameenn,",
+    "Kunci motor aku ketinggalan dimotorrr😭,",
+    "Kamu nyeritain yang tukang helm disebrang anaknya tuh temen kamuu🤣🤣,",
+    "Terus kalo gak salah waktu itu tuh agak hujan yaaa,",
+    "Kangen banget yaaa masa masa duluu,",
+    "Kangen ngeliat kamu yang ceria lagii ehehehee😘😘"
+  ];
+  const elemen = [
+    document.getElementById("text14-1"),
+    document.getElementById("text14-2"),
+    document.getElementById("text14-3"),
+    document.getElementById("text14-4"),
+    document.getElementById("text14-5"),
+    document.getElementById("text14-6"),
+    document.getElementById("text14-7"),
+    document.getElementById("text14-8"),
+    document.getElementById("text14-9")
+  ];
+  const tombol = document.getElementById("btn14");
+
+  foto.style.opacity = 1;
+  await new Promise(r => setTimeout(r, 1000));
+
+  for(let i=0;i<teks.length;i++){
+    await new Promise(resolve => { typeText(elemen[i], teks[i], 50, resolve); });
+    await new Promise(r => setTimeout(r, 300));
+  }
+
+  tombol.style.display = "inline-block";
+}
+
+/* HAL 15 ANIMASI */
+async function tampilkanPage15() {
+  const foto = document.getElementById("foto15");
+  const teks = [
+    "Aku bingung sebenernya, ini foto waktu dimana sama kapan yaaa😭😭😭,",
+    "Aku lupaaa aseeelliii😭😭😘",
+    "Maaffiin yaaaa, atau waktu kita makan apa tuh yang steak kurus yaa, yang dibaleendah, ituu mereun yaa,",
+    "Keliat banget tuh di foto kamu happy banget ai aku cuek aja☺️,",
+    "Semoggaaa kedepannya kamu bisa happy kayak dulu lagii yaaa,",
+    "Semoga kamu cepet sembuh juga eheheeeeee😘😘😘.",
+
+  ];
+  const elemen = [
+    document.getElementById("text15-1"),
+    document.getElementById("text15-2"),
+    document.getElementById("text15-3"),
+    document.getElementById("text15-4"),
+    document.getElementById("text15-5"),
+    document.getElementById("text15-6")
+  ];
+  const tombol = document.getElementById("btn15");
+
+  foto.style.opacity = 1;
+  await new Promise(r => setTimeout(r, 1000));
+
+  for(let i=0;i<teks.length;i++){
+    await new Promise(resolve => { typeText(elemen[i], teks[i], 50, resolve); });
+    await new Promise(r => setTimeout(r, 300));
+  }
+
+  tombol.style.display = "inline-block";
+}
+
+/* HAL 16 ANIMASI */
+async function tampilkanPage16() {
+  const foto = document.getElementById("foto16");
+  const teks = [
+    "Kalo ini waktu kita nonton bioskop yaaa???,",
+    "Benerr kannn?",
+    "Kannn??",
+    "Bisi aku salah,",
+    "Tapi da benerrr waktu nonton bioskopp😭😭😭",
+    "Yakann yaaaaa kannn kannnn.",
+
+  ];
+  const elemen = [
+    document.getElementById("text16-1"),
+    document.getElementById("text16-2"),
+    document.getElementById("text16-3"),
+    document.getElementById("text16-4"),
+    document.getElementById("text16-5"),
+    document.getElementById("text16-6")
+  ];
+  const tombol = document.getElementById("btn16");
+
+  foto.style.opacity = 1;
+  await new Promise(r => setTimeout(r, 1000));
+
+  for(let i=0;i<teks.length;i++){
+    await new Promise(resolve => { typeText(elemen[i], teks[i], 50, resolve); });
+    await new Promise(r => setTimeout(r, 300));
+  }
+
+  tombol.style.display = "inline-block";
+}
+
+/* HAL 17 ANIMASI */
+async function tampilkanPage17() {
+  const foto = document.getElementById("foto17");
+  const teks = [
+    "Kalo ini waktu kamu nyari buku psikolog buat tugas kannn,",
+    "yang ada foto kamu lagi eeee😭😭🤣🤣😘😘,",
+    "Yang fotonya langsung aku swin😭😭😭😭😭😭😭😭,",
+    "Asa kita mah yahhh, main teh, alun alun, braga, gramed udahh konyoll,",
+    "Kapan kapan mah, ya kalo kita ditakdirin bareng lagi, kita cari tempat baruuuu,",
+    "Biar SEEERROOOOO",
+
+  ];
+  const elemen = [
+    document.getElementById("text17-1"),
+    document.getElementById("text17-2"),
+    document.getElementById("text17-3"),
+    document.getElementById("text17-4"),
+    document.getElementById("text17-5"),
+    document.getElementById("text17-6")
+  ];
+  const tombol = document.getElementById("btn17");
+
+  foto.style.opacity = 1;
+  await new Promise(r => setTimeout(r, 1000));
+
+  for(let i=0;i<teks.length;i++){
+    await new Promise(resolve => { typeText(elemen[i], teks[i], 50, resolve); });
+    await new Promise(r => setTimeout(r, 300));
+  }
+
+  tombol.style.display = "inline-block";
+}
+
+/* HAL 18 ANIMASI */
+async function tampilkanPage18() {
+  const foto = document.getElementById("foto18");
+  const teks = [
+    "Ini photobox kita waktu di king yaaa,",
+    "Abis ngapain sih aku lupa😭,",
+    "Asa banyak lupanya yaaaa,",
+    "Yang aku inget mah udahnya kamu ketoilett🤣🤣,",
+    "Terusss udah dari toilettt makan roti tea ning roti apa itu teh yang makan ditempattt,",
+    "Teruss jalan jalan",
+    "Jalan jalan",
+    "Dan jalan jalan",
+    "Gitu doang juga happy ya kita dulu☺️☺️☺️"
+  ];
+  const elemen = [
+    document.getElementById("text18-1"),
+    document.getElementById("text18-2"),
+    document.getElementById("text18-3"),
+    document.getElementById("text18-4"),
+    document.getElementById("text18-5"),
+    document.getElementById("text18-6"),
+    document.getElementById("text18-7"),
+    document.getElementById("text18-8"),
+    document.getElementById("text18-9")
+  ];
+  const tombol = document.getElementById("btn18");
+
+  foto.style.opacity = 1;
+  await new Promise(r => setTimeout(r, 1000));
+
+  for(let i=0;i<teks.length;i++){
+    await new Promise(resolve => { typeText(elemen[i], teks[i], 50, resolve); });
+    await new Promise(r => setTimeout(r, 300));
+  }
+
+  tombol.style.display = "inline-block";
+}
+
+/* HAL 19 ANIMASI */
+async function tampilkanPage19() {
+  const foto = document.getElementById("foto19");
+  const teks = [
+    "Ini foto waktu aku ngejemput kamu distasiun,",
+    "Bayangin aku dijalan buru buru,",
+    "Mana jalannya asing lagii😭😭😭,",
+    "Demi biar kamu gak nungguin karena kamu pasti carape abis dari kereta🤣🤣🤣🤣😘😘,",
+    "Langsung udahnya laporan ibu kamu😎,",
+    "Aseekk caper dulu dikit ke camerr😎😎😎,",
+    "Terus beli semangka ya waktu itu tehhh kamu🤣🤣🤣,",
+    "Aya aya wae buat nyogok temen kamu🤣🤣🤣🤣,",
+    "Aya aya wae gembroottt gembrooottt☺️☺️☺️"
+  ];
+  const elemen = [
+    document.getElementById("text19-1"),
+    document.getElementById("text19-2"),
+    document.getElementById("text19-3"),
+    document.getElementById("text19-4"),
+    document.getElementById("text19-5"),
+    document.getElementById("text19-6"),
+    document.getElementById("text19-7"),
+    document.getElementById("text19-8"),
+    document.getElementById("text19-9")
+  ];
+  const tombol = document.getElementById("btn19");
+
+  foto.style.opacity = 1;
+  await new Promise(r => setTimeout(r, 1000));
+
+  for(let i=0;i<teks.length;i++){
+    await new Promise(resolve => { typeText(elemen[i], teks[i], 50, resolve); });
+    await new Promise(r => setTimeout(r, 300));
+  }
+
+  tombol.style.display = "inline-block";
+}
+
+/* HAL 20 ANIMASI */
+async function tampilkanPage20() {
+  const foto = document.getElementById("foto20");
+  const teks = [
+    "Ini waktu di cafeeee garut yang deket stasiun,",
+    "Enak ya waktu itu puding caramelnya,",
+    "Kita teh pesen apaaa seeh,",
+    "Aku kopi yaaa,",
+    "Kamu strawberry,",
+    "Terus makanannya roti dan puding,",
+    "Yang udahnya perut aku sakit seeul gara gara kopi😭😭😭😭,",
+    "Aya aya wae atuda kamuu gembroottt gembrooott😭😭😭,",
+    "Pas ini tuh kamu teh asa lagi pengen sushi,",
+    "Ariteun pas aku tunjukin tuh tempat sushi,",
+    "Malah gak mauu😒😒😒,",
+    "Konyol aya aya wae,",
+    "Dasar gembrooott gembrooottt,",
+    "Waktu itu tuh aku seneng banget tiap ketemu kamu,",
+    "Sampe sekarang hati aku bawaannya tenanngggg kalo ketemu kamu heheheee😄😄😄."
+  ];
+  const elemen = [
+    document.getElementById("text20-1"),
+    document.getElementById("text20-2"),
+    document.getElementById("text20-3"),
+    document.getElementById("text20-4"),
+    document.getElementById("text20-5"),
+    document.getElementById("text20-6"),
+    document.getElementById("text20-7"),
+    document.getElementById("text20-8"),
+    document.getElementById("text20-9"),
+    document.getElementById("text20-10"),
+    document.getElementById("text20-11"),
+    document.getElementById("text20-12"),
+    document.getElementById("text20-13"),
+    document.getElementById("text20-14"),
+    document.getElementById("text20-15")
+  ];
+  const tombol = document.getElementById("btn20");
+
+  foto.style.opacity = 1;
+  await new Promise(r => setTimeout(r, 1000));
+
+  for(let i=0;i<teks.length;i++){
+    await new Promise(resolve => { typeText(elemen[i], teks[i], 50, resolve); });
+    await new Promise(r => setTimeout(r, 300));
+  }
+
+  tombol.style.display = "inline-block";
+}
+
+/* HAL 21 ANIMASI */
+async function tampilkanPage21() {
+  const foto = document.getElementById("foto21");
+  const teks = [
+    "Ini photobox kita waktu di garutt yaaa🤣🤣,",
+    "Jadi kangen KKN lagii ehehehe😘😘😘,",
+    "Kangen bareng kamu jugaaa uhuhuhuhuhu☺️☺️,",
+    "Gapapa wee lah yaaa, udah jalannya mungkin harus gini,",
+    "Waktu abis dari sana teh kemana kita yaaa,",
+    "Keliling keliling dulu bentar yaa kalo gak salah,",
+    "Da kamu teh gk mau lepas dari akuu🤣🤣🤣🤣",
+    "Ehhh sekarang😄😄."
+  ];
+  const elemen = [
+    document.getElementById("text21-1"),
+    document.getElementById("text21-2"),
+    document.getElementById("text21-3"),
+    document.getElementById("text21-4"),
+    document.getElementById("text21-5"),
+    document.getElementById("text21-6"),
+    document.getElementById("text21-7"),
+    document.getElementById("text21-8")
+  ];
+  const tombol = document.getElementById("btn21");
+
+  foto.style.opacity = 1;
+  await new Promise(r => setTimeout(r, 1000));
+
+  for(let i=0;i<teks.length;i++){
+    await new Promise(resolve => { typeText(elemen[i], teks[i], 50, resolve); });
+    await new Promise(r => setTimeout(r, 300));
+  }
+
+  tombol.style.display = "inline-block";
+}
+
+/* HAL 22 ANIMASI FIX */
+
+async function tampilkanPage22(){
+
+  const urutan = [
+    { foto:"foto221", teks:"text22-1" },
+    { teks:"text22-2" },
+    { teks:"text22-3" },
+    { teks:"text22-4" },
+    { teks:"text22-5" },
+
+    { foto:"foto222", teks:"text22-6" },
+    { foto:"foto223", teks:"text22-7" },
+    { foto:"foto224", teks:"text22-8" },
+    { foto:"foto225", teks:"text22-9" },
+    { foto:"foto226", teks:"text22-10" },
+
+    { teks:"text22-11" },
+
+    { foto:"foto227", teks:"text22-12" },
+    { foto:"foto228", teks:"text22-13" },
+    { foto:"foto229", teks:"text22-14" },
+    { foto:"foto2210", teks:"text22-15" },
+    { foto:"foto2211", teks:"text22-16" },
+    { foto:"foto2212", teks:"text22-17" },
+
+    { teks:"text22-18" },
+    { teks:"text22-19" }
+  ];
+
+  const teksIsi = [
+    "Haaiii nduuttt",
+    "Kamu gimanaa kabarnya sekarang?😄",
+    "Udah bahagia lagi?😊",
+    "Atau masih bingung sama perasaan kamu?",
+    "Ingettt gakk dulu, padahal dulu kamu paling gampang loh buat ngeluarin emosi yang ada dalam diri kamu, kayak nangiss, kesell, maraahh, senengg, bahagiaaa dan masih banyak lagii, dulu kalo kamu lagi seneng biasanya suka manggil aku temboll🤣🤣, aku gak ngerti maksudnya apa sebenernya, tapi ya seneng aja dipanggil itu sama kamu😄😁, jangan kaget yaaa kalo banyak foto foto kamu muncul disini, itu tuh sebagian foto foto kamu yang jadi favorit aku eheheheheeee😂😂😂",
+    "Ehhhh lupaaa, selamat tahun baruuu ndutku sayangkuu🥳🥳🥳, ehhh udah ya tadi di awal, gapapa dengg, semogaaa di tahun ini banyak hal hal baik buat kita, terutama kamu yaaaa, semogaaa kamu bisa lebih bahagia dari pada tahun kemarinnn, semogaaaaa apa yang kamu harapkan terwujudd, semoggaaaa apa yang kamu usahain tercapaii yaaa, semogaa jadi psikolog yang suksess aamiin😘😘😘, semogaa keadaan keluarga kamu lekas membaik yaaa, dan hubungan kita juga mereeuunn😂😄, semoga apa yang kamu semogakan tersemogakan we aja yaaaaaaa",
+    "Ingett gakk kamu, waktu aku pertama kali nembak kamu🤣🤣🤣, aduhh aya aya wae jadi malu juga, kamu gk ngeh waktu itu suara aku gemeter, tangan aku gemeter🤣🤣🤣, terus pas pulang dari kamu aku liat spion aku terus, liatin kamu huhuhuhuhu😅😅, jago ya modus aku dulu, biar kamu klepek klepek ke aku 🤣🤣🤣, mana baru berapa bulan ning aku langsung berani chat ibu kamu buat minta izin mainn🤣🤣🤣, aya aya wae gembrooott gembroott",
+    "Ingett gakk, modus waktu bukber, harusnya aku nganter si ebi, tapi males aku pengennya sama kamu🤣🤣🤣, gembroott aya aya waeee, modus ngasihin hadiah dari siapa tuh, aku kasihin kekamu aja😂😂, terus buku novel kamu, da bukan sama aku hilangnya, sama si rifqi😒, tapi ngadon nyalahin akuu😞😞, padahal aku udah bilang kekamu novel itu buat aku yaaa🤣🤣🤣, kamunya cuman apa ya da ngomong langsung ngaleos🤣🤣🤣, oohhh iya aku doain kamu, kalo ujian PPKN bisa dapet 100 kayak aku aamiin",
+    "Dulu ya, waktu semester 1 aku masih inget waktu cinta aku masih menggebu gebu heheheeee, yang aku nganter kamu pulang wae gratis gk bayar, terus apa yaaa, nraktir yaa, yaaaa full effort ya dulu akuu waktu awal awal, naik semester 2 wee aku gk biss ngontrol pikiran akuu, maafin aku ya sayangkuu",
+    "Sekarang gimana keadaan kamu tanpa aku? Apa lebih bahagia?😄",
+    "Semoga lebih bahagia yaaa, aku juga udah sadar sama semua kelakuan aku, sama semua kesalahan aku, aku juga gak mau liat kamu sedih lagi terus, (padahal mah kalo kamu nangis aku suka ledekin🤣🤣🤣), kalo kamu udah ngerasa gak cocok mungkin sama aku, gapapaa yaaa, semoga ada laki laki lain yang bisa lebih baik ngeperlakuin kamu dari pada aku yaaa, tapi kamu jangan sampe hilang diri lagi ya, sampe ngerasa bukan diri kamu sendiri, aku doain semoga kehidupan kamu selanjutnya lebih bahagia yaaa.",
+    "Sejauh ini aku masih naruh harapan kekamu, walaupun kamu mungkin gak percaya lagi ke aku, tapi coba denger lagu yang aku puter ini buat kamu, coba dehh pahamin maknanya ehehee😅😅",
+    "Sejauh ini dari kita pisah sampe sekarang, ya kehidupan aku gini aja🤣🤣, kayak yaudah udah gk ada tujuan hidup lagi😄😄, tapi gapapa kookkk, kamu jangan merasa bersalah yaaaa intinya ya gitu aja weee yaaaa, jangan lupa bahagia, jangan sesalin pilihan kamu kedepannya yaaa😅, jangan sampe salah pilih jugaa (semoga pilih aku😋😋😋), candaa cuman ya kalo emang kamu mau balik lagi juga gapapa, aku usahain buat bahagiain kamu, gk akan bikin kamu sedih karena kelakuan dan sikap aku lagi, maafin aku ya sayangkuuu.",
+    "Seandainya nanti kita gak bisa bareng lagi, aku masih disini kokk😁😁, aku masih bisa buat jadi tempat kamu singgah, tempat kamu ceritaa😄😄, seandainya ternyata cowo pengganti aku itu lebih buruk dari aku, gapapa kamu cerita ke aku aja yaaa, kita cari jalan keluarnya, gapapa kamu mau nyari sosok ayah di diri aku, anggap aja aku kayak ayah kamu kalo kamu lagi kesusahan, pasangan kamu kalo kamu lagi kebingungan, temen kamuu kalo kamu lagi butuh kehangatan, yaaa jangan karna status kita mantan kamu jadi canggung eheheheeee😊😊.",
+    "Kalo seandainya aku pergi dan hilang, tapi ternyata kamu masih liat ada secercah harapan buat bareng aku lagi, tolong cari aku yaa😊😊, bujuk aku, paksa aku buat perbaiki semuanyaa😊😊, aku harap yang terbaik buat kamu, jangan sedih terus yaaaa☺️☺️, karna kejadian ini juga aku sadar peran seorang pasangan itu harus gimana, kewajiban dan hak hak yang harus aku kasih kekamu itu apa, sekarang aku ngerti itu semua, maafin aku yang dulu ya sayangku, aku yang tahun kemarin gk akan datang lagi kokk, jadi jangan takut yaaa.",
+    "Ohhhh iya aku minta 1 hal, kamu ayo ke psikolog yaaa, ceritain semuanya jangan ada yang kamu tutupin, nanti aku anter deh kesananya, aku gak bisa bantu kesembuhan kamu, tapi aku pasti temenin kamu sampe kamu sembuh yaaa😊😊😊",
+    "Udah yaaa, ini terakhir hehheeee, jangan lupa bahagia, semoga cita cita kamu semuanya tercapai, jangan ngulangin masa masa kelam kamu yang dulu lagii yaaa, jangan ngasih full effort kalo pasangan kamu juga gk ngasih effort yang setara yaaaa, tapi harus saling ngertiin juga seandainya pasangan kamu cape, jangan terlalu dipaksa yaa, tapi kalo dia pengangguran dan diem doang, terus cuekk, wajar itu mah (wajib di hajar😂🤣🤣🤣), udahh yaaa jangan sedih lagii,",
+    "Cepet sembuh ya sayangkuu, cintakuu, genduttkkuu, baweellkuuu, kebahagiaankuuu eheheeee😘😘.",
+    "Jangan banyak typo kalo ngomong sama ngedenger upss🤭🤭"
+  ];
+
+  let indexTeks = 0;
+
+  for(const item of urutan){
+
+    if(item.foto){
+      const img = document.getElementById(item.foto);
+      img.classList.add("show");
+      await new Promise(r=>setTimeout(r,800));
+    }
+
+    if(item.teks){
+      const el = document.getElementById(item.teks);
+      await new Promise(res=>{
+        typeText(el, teksIsi[indexTeks++], 45, res);
+      });
+      await new Promise(r=>setTimeout(r,400));
+    }
+  }
+
+  document.getElementById("btn22").style.display="inline-block";
+}
+
+/* penutup */
+async function tampilkanPage24(){
+
+  const foto = document.getElementById("foto24");
+  const teks = [
+    "Makasih yaa sayangku udah mau baca semuanya sampai akhir 🤍",
+    "Aku harap, apapun yang kamu rasain abis ini, semoga hatimu jadi sedikit lebih tenang dan plongg eheheee😘😘.",
+    "Jaga diri kamu baik-baik yaa, jangan lupa bahagia 🤍"
+  ];
+
+  const el = [
+    document.getElementById("text24-1"),
+    document.getElementById("text24-2"),
+    document.getElementById("text24-3")
+  ];
+
+  // foto muncul dulu
+  foto.classList.add("show");
+  await new Promise(r=>setTimeout(r,900));
+
+  // teks ngetik satu-satu
+  for(let i=0;i<teks.length;i++){
+    await new Promise(res=>{
+      typeText(el[i], teks[i], 45, res);
+    });
+    await new Promise(r=>setTimeout(r,400));
+  }
+}
+
+/* tombol tutup */
+function closePage(){
+  // Stop semua musik
+  const bgMusic = document.getElementById("bgMusic");
+  const endingMusic = document.getElementById("endingMusic");
+  bgMusic.pause();
+  bgMusic.currentTime = 0;
+  endingMusic.pause();
+  endingMusic.currentTime = 0;
+  
+  document.body.innerHTML = `
+    <div style="
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      height:100vh;
+      background:#000;
+      font-family:'Pacifico';
+      font-size:36px;
+      color:white;
+      text-align:center;
+      padding:20px;">
+      <div style="font-size:80px; margin-bottom:20px;">🤍</div>
+      <div>Love You Gembroott Nduuttt</div>
+      <div style="font-size:24px; margin-top:20px; color:#aaa;">Made with 🤍 by Cevi</div>
+    </div>
+  `;
+}
+
+
+/* PINDAH PAGE */
+function goToPage(n){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById("page"+n).classList.add("active");
+  showFade(n);
+
+  // Panggil animasi khusus page
+  if(n === 11) tampilkanPage11();
+  if(n === 12) tampilkanPage12();
+  if(n === 13) tampilkanPage13();
+  if(n === 14) tampilkanPage14();
+  if(n === 15) tampilkanPage15();
+  if(n === 16) tampilkanPage16();
+  if(n === 17) tampilkanPage17();
+  if(n === 18) tampilkanPage18();
+  if(n === 19) tampilkanPage19();
+  if(n === 20) tampilkanPage20();
+  if(n === 21) tampilkanPage21();
+  if(n === 22) tampilkanPage22();
+  if(n === 23) tampilkanPage23();
+  if(n === 24) tampilkanPage24();
+  if (n === 25) {
+    // Stop musik di halaman 24
+    const bgMusic = document.getElementById("bgMusic");
+    bgMusic.pause();
+    bgMusic.currentTime = 0;
+    
+    // Mulai halaman 25
+    tampilkanPage25();
+  }
+}
+
+/* HAL 23 */
+function kirimPesan(){
+  const pesan = document.getElementById("pesanDia").value.trim();
+  const status = document.getElementById("statusKirim");
+  const btn = document.getElementById("btnKirim");
+  const env = document.getElementById("envelope");
+  const penutup = document.getElementById("penutup");
+
+  if(!pesan){
+    status.innerHTML = "Pesannya jangan kosong ya 🤍";
+    status.style.color = "red";
+    return;
+  }
+
+  btn.disabled = true;
+  status.innerHTML = "Mengirim pesan...";
+  status.style.color = "#777";
+
+  fetch("https://script.google.com/macros/s/AKfycbzUKT-pv3zH5htysvmcOtLRHpj8NqpzG9rNu83mXiz4EIt4oEIilkir19ECGocRYSeB/exec", {
+    method: "POST",
+    body: JSON.stringify({ pesan }),
+  })
+  .then(res => res.json())
+  .then(() => {
+  status.innerHTML = "Pesanmu sudah terkirim 🤍";
+  status.style.color = "#4b5f55";
+
+  env.classList.add("fly");
+  document.getElementById("pesanDia").disabled = true;
+
+  setTimeout(()=>{
+    penutup.style.display="block";
+
+    const btnNext = document.getElementById("btn23");
+    btnNext.style.display = "inline-block";
+    btnNext.classList.add("fade-btn");
+  },1200);
+})
+
+  .catch(()=>{
+    status.innerHTML = "Gagal mengirim pesan 😢";
+    status.style.color = "red";
+    btn.disabled = false;
+  });
+}
+
+const textarea = document.getElementById("pesanDia");
+const pencil = document.querySelector(".pencil");
+
+textarea.addEventListener("input",()=>{
+  pencil.style.transform = "rotate(-15deg) translateY(2px)";
+  setTimeout(()=>{
+    pencil.style.transform = "rotate(-8deg)";
+  },100);
+});
+
+/* LOAD */
+window.onload=()=>showFade(1);
+</script>
+
+<script>
+async function tampilkanPage22(){
+
+  const items = document.querySelectorAll("#page22 .item22");
+
+  for(const item of items){
+
+    // bikin struktur
+    const text = document.createElement("div");
+    text.className = "text22";
+
+    const frame = document.createElement("div");
+    frame.className = "frame22";
+
+    const images = item.dataset.images.split(",");
+    images.forEach((src,i)=>{
+      const img = document.createElement("img");
+      img.src = src.trim();
+      if(i===0) img.classList.add("active");
+      frame.appendChild(img);
+    });
+
+    // pasang posisi
+    if(item.classList.contains("right")){
+      item.append(text, frame);
+    }else{
+      item.append(frame, text);
+    }
+
+    // tampil item
+    item.classList.add("show");
+    await delay(600);
+
+    // mulai loop gambar
+    startLoop(frame);
+
+    // teks ngetik
+    await typeWriter(text, item.dataset.text);
+
+    await delay(600);
+  }
+
+  document.getElementById("btn22").style.display="inline-block";
+}
+
+/* TYPEWRITER */
+function typeWriter(el,text){
+  return new Promise(resolve=>{
+    el.innerHTML="";
+    let i=0;
+    const t=setInterval(()=>{
+      el.innerHTML+=text.charAt(i++);
+      if(i>=text.length){
+        clearInterval(t);
+        resolve();
+      }
+    },45);
+  });
+}
+
+/* LOOP FOTO */
+function startLoop(frame){
+  const imgs = frame.querySelectorAll("img");
+  let i=0;
+  setInterval(()=>{
+    imgs.forEach(img=>img.classList.remove("active"));
+    i=(i+1)%imgs.length;
+    imgs[i].classList.add("active");
+  },4000);
+}
+
+/* delay */
+function delay(ms){
+  return new Promise(r=>setTimeout(r,ms));
+}
+
+/* Daftar teks kredit (Anda bisa edit/ganti dengan 1600 teks Anda) */
+const creditTexts = [
+    "Directed by Cevi Miftah Fauzan",
+  "Executive Producer: Cevi Miftah Fauzan",
+  "Producer: Cevi Miftah Fauzan",
+  "Associate Producer: Cevi Miftah Fauzan",
+  "Written by Cevi Miftah Fauzan",
+  "Story by Cevi Miftah Fauzan",
+  "Based on Our Memories",
+  "Creative Director: Cevi Miftah Fauzan",
+  "Art Director: Cevi Miftah Fauzan",
+  "Visual Director: Cevi Miftah Fauzan",
+  "Music Supervisor: Cevi Miftah Fauzan",
+  "Sound Design: Cevi Miftah Fauzan",
+  "Editor: Cevi Miftah Fauzan",
+  "Colorist: Cevi Miftah Fauzan",
+  "Post-Production Supervisor: Cevi Miftah Fauzan",
+  "——",
+  "Cast",
+  "Dzykra Fahira as Herself",
+  "Cevi Miftah Fauzan as Someone Who Loved",
+  "——",
+  "Special Appearance: Dzykra Fahira",
+  "Casting Director: Cevi Miftah Fauzan",
+  "Location Manager: Cevi Miftah Fauzan",
+  "Production Manager: Cevi Miftah Fauzan",
+  "Production Assistant: Cevi Miftah Fauzan",
+  "Script Supervisor: Cevi Miftah Fauzan",
+  "Continuity: Cevi Miftah Fauzan",
+  "Still Photography: Cevi Miftah Fauzan",
+  "Behind the Scene: Cevi Miftah Fauzan",
+  "——",
+  "This Story Was Created With",
+  "Patience",
+  "Memories",
+  "Silence",
+  "And Love",
+  "the days we've shared",
+  "10 Mei 2022, Selasa",
+  "11 Mei 2022, Rabu",
+  "12 Mei 2022, Kamis",
+  "13 Mei 2022, Jumat",
+  "14 Mei 2022, Sabtu",
+  "15 Mei 2022, Minggu",
+  "16 Mei 2022, Senin",
+  "17 Mei 2022, Selasa",
+  "18 Mei 2022, Rabu",
+  "19 Mei 2022, Kamis",
+  "20 Mei 2022, Jumat",
+  "21 Mei 2022, Sabtu",
+  "22 Mei 2022, Minggu",
+  "23 Mei 2022, Senin",
+  "24 Mei 2022, Selasa",
+  "25 Mei 2022, Rabu",
+  "26 Mei 2022, Kamis",
+  "27 Mei 2022, Jumat",
+  "28 Mei 2022, Sabtu",
+  "29 Mei 2022, Minggu",
+  "30 Mei 2022, Senin",
+  "31 Mei 2022, Selasa",
+  "1 Juni 2022, Rabu",
+  "2 Juni 2022, Kamis",
+  "3 Juni 2022, Jumat",
+  "4 Juni 2022, Sabtu",
+  "5 Juni 2022, Minggu",
+  "6 Juni 2022, Senin",
+  "7 Juni 2022, Selasa",
+  "8 Juni 2022, Rabu",
+  "9 Juni 2022, Kamis",
+  "10 Juni 2022, Jumat",
+  "11 Juni 2022, Sabtu",
+  "12 Juni 2022, Minggu",
+  "13 Juni 2022, Senin",
+  "14 Juni 2022, Selasa",
+  "15 Juni 2022, Rabu",
+  "16 Juni 2022, Kamis",
+  "17 Juni 2022, Jumat",
+  "18 Juni 2022, Sabtu",
+  "19 Juni 2022, Minggu",
+  "20 Juni 2022, Senin",
+  "21 Juni 2022, Selasa",
+  "22 Juni 2022, Rabu",
+  "23 Juni 2022, Kamis",
+  "24 Juni 2022, Jumat",
+  "25 Juni 2022, Sabtu",
+  "26 Juni 2022, Minggu",
+  "27 Juni 2022, Senin",
+  "28 Juni 2022, Selasa",
+  "29 Juni 2022, Rabu",
+  "30 Juni 2022, Kamis",
+  "1 Juli 2022, Jumat",
+  "2 Juli 2022, Sabtu",
+  "3 Juli 2022, Minggu",
+  "4 Juli 2022, Senin",
+  "5 Juli 2022, Selasa",
+  "6 Juli 2022, Rabu",
+  "7 Juli 2022, Kamis",
+  "8 Juli 2022, Jumat",
+  "9 Juli 2022, Sabtu",
+  "10 Juli 2022, Minggu",
+  "11 Juli 2022, Senin",
+  "12 Juli 2022, Selasa",
+  "13 Juli 2022, Rabu",
+  "14 Juli 2022, Kamis",
+  "15 Juli 2022, Jumat",
+  "16 Juli 2022, Sabtu",
+  "17 Juli 2022, Minggu",
+  "18 Juli 2022, Senin",
+  "19 Juli 2022, Selasa",
+  "20 Juli 2022, Rabu",
+  "21 Juli 2022, Kamis",
+  "22 Juli 2022, Jumat",
+  "23 Juli 2022, Sabtu",
+  "24 Juli 2022, Minggu",
+  "25 Juli 2022, Senin",
+  "26 Juli 2022, Selasa",
+  "27 Juli 2022, Rabu",
+  "28 Juli 2022, Kamis",
+  "29 Juli 2022, Jumat",
+  "30 Juli 2022, Sabtu",
+  "31 Juli 2022, Minggu",
+  "1 Agustus 2022, Senin",
+  "2 Agustus 2022, Selasa",
+  "3 Agustus 2022, Rabu",
+  "4 Agustus 2022, Kamis",
+  "5 Agustus 2022, Jumat",
+  "6 Agustus 2022, Sabtu",
+  "7 Agustus 2022, Minggu",
+  "8 Agustus 2022, Senin",
+  "9 Agustus 2022, Selasa",
+  "10 Agustus 2022, Rabu",
+  "11 Agustus 2022, Kamis",
+  "12 Agustus 2022, Jumat",
+  "13 Agustus 2022, Sabtu",
+  "14 Agustus 2022, Minggu",
+  "15 Agustus 2022, Senin",
+  "16 Agustus 2022, Selasa",
+  "17 Agustus 2022, Rabu",
+  "18 Agustus 2022, Kamis",
+  "19 Agustus 2022, Jumat",
+  "20 Agustus 2022, Sabtu",
+  "21 Agustus 2022, Minggu",
+  "22 Agustus 2022, Senin",
+  "23 Agustus 2022, Selasa",
+  "24 Agustus 2022, Rabu",
+  "25 Agustus 2022, Kamis",
+  "26 Agustus 2022, Jumat",
+  "27 Agustus 2022, Sabtu",
+  "28 Agustus 2022, Minggu",
+  "29 Agustus 2022, Senin",
+  "30 Agustus 2022, Selasa",
+  "31 Agustus 2022, Rabu",
+  "1 September 2022, Kamis",
+  "2 September 2022, Jumat",
+  "3 September 2022, Sabtu",
+  "4 September 2022, Minggu",
+  "5 September 2022, Senin",
+  "6 September 2022, Selasa",
+  "7 September 2022, Rabu",
+  "8 September 2022, Kamis",
+  "9 September 2022, Jumat",
+  "10 September 2022, Sabtu",
+  "11 September 2022, Minggu",
+  "12 September 2022, Senin",
+  "13 September 2022, Selasa",
+  "14 September 2022, Rabu",
+  "15 September 2022, Kamis",
+  "16 September 2022, Jumat",
+  "17 September 2022, Sabtu",
+  "18 September 2022, Minggu",
+  "19 September 2022, Senin",
+  "20 September 2022, Selasa",
+  "21 September 2022, Rabu",
+  "22 September 2022, Kamis",
+  "23 September 2022, Jumat",
+  "24 September 2022, Sabtu",
+  "25 September 2022, Minggu",
+  "26 September 2022, Senin",
+  "27 September 2022, Selasa",
+  "28 September 2022, Rabu",
+  "29 September 2022, Kamis",
+  "30 September 2022, Jumat",
+  "1 Oktober 2022, Sabtu",
+  "2 Oktober 2022, Minggu",
+  "3 Oktober 2022, Senin",
+  "4 Oktober 2022, Selasa",
+  "5 Oktober 2022, Rabu",
+  "6 Oktober 2022, Kamis",
+  "7 Oktober 2022, Jumat",
+  "8 Oktober 2022, Sabtu",
+  "9 Oktober 2022, Minggu",
+  "10 Oktober 2022, Senin",
+  "11 Oktober 2022, Selasa",
+  "12 Oktober 2022, Rabu",
+  "13 Oktober 2022, Kamis",
+  "14 Oktober 2022, Jumat",
+  "15 Oktober 2022, Sabtu",
+  "16 Oktober 2022, Minggu",
+  "17 Oktober 2022, Senin",
+  "18 Oktober 2022, Selasa",
+  "19 Oktober 2022, Rabu",
+  "20 Oktober 2022, Kamis",
+  "21 Oktober 2022, Jumat",
+  "22 Oktober 2022, Sabtu",
+  "23 Oktober 2022, Minggu",
+  "24 Oktober 2022, Senin",
+  "25 Oktober 2022, Selasa",
+  "26 Oktober 2022, Rabu",
+  "27 Oktober 2022, Kamis",
+  "28 Oktober 2022, Jumat",
+  "29 Oktober 2022, Sabtu",
+  "30 Oktober 2022, Minggu",
+  "31 Oktober 2022, Senin",
+  "1 November 2022, Selasa",
+  "2 November 2022, Rabu",
+  "3 November 2022, Kamis",
+  "4 November 2022, Jumat",
+  "5 November 2022, Sabtu",
+  "6 November 2022, Minggu",
+  "7 November 2022, Senin",
+  "8 November 2022, Selasa",
+  "9 November 2022, Rabu",
+  "10 November 2022, Kamis",
+  "11 November 2022, Jumat",
+  "12 November 2022, Sabtu",
+  "13 November 2022, Minggu",
+  "14 November 2022, Senin",
+  "15 November 2022, Selasa",
+  "16 November 2022, Rabu",
+  "17 November 2022, Kamis",
+  "18 November 2022, Jumat",
+  "19 November 2022, Sabtu",
+  "20 November 2022, Minggu",
+  "21 November 2022, Senin",
+  "22 November 2022, Selasa",
+  "23 November 2022, Rabu",
+  "24 November 2022, Kamis",
+  "25 November 2022, Jumat",
+  "26 November 2022, Sabtu",
+  "27 November 2022, Minggu",
+  "28 November 2022, Senin",
+  "29 November 2022, Selasa",
+  "30 November 2022, Rabu",
+  "1 Desember 2022, Kamis",
+  "2 Desember 2022, Jumat",
+  "3 Desember 2022, Sabtu",
+  "4 Desember 2022, Minggu",
+  "5 Desember 2022, Senin",
+  "6 Desember 2022, Selasa",
+  "7 Desember 2022, Rabu",
+  "8 Desember 2022, Kamis",
+  "9 Desember 2022, Jumat",
+  "10 Desember 2022, Sabtu",
+  "11 Desember 2022, Minggu",
+  "12 Desember 2022, Senin",
+  "13 Desember 2022, Selasa",
+  "14 Desember 2022, Rabu",
+  "15 Desember 2022, Kamis",
+  "16 Desember 2022, Jumat",
+  "17 Desember 2022, Sabtu",
+  "18 Desember 2022, Minggu",
+  "19 Desember 2022, Senin",
+  "20 Desember 2022, Selasa",
+  "21 Desember 2022, Rabu",
+  "22 Desember 2022, Kamis",
+  "23 Desember 2022, Jumat",
+  "24 Desember 2022, Sabtu",
+  "25 Desember 2022, Minggu",
+  "26 Desember 2022, Senin",
+  "27 Desember 2022, Selasa",
+  "28 Desember 2022, Rabu",
+  "29 Desember 2022, Kamis",
+  "30 Desember 2022, Jumat",
+  "31 Desember 2022, Sabtu",
+  "1 Januari 2023, Minggu",
+  "2 Januari 2023, Senin",
+  "3 Januari 2023, Selasa",
+  "4 Januari 2023, Rabu",
+  "5 Januari 2023, Kamis",
+  "6 Januari 2023, Jumat",
+  "7 Januari 2023, Sabtu",
+  "8 Januari 2023, Minggu",
+  "9 Januari 2023, Senin",
+  "10 Januari 2023, Selasa",
+  "11 Januari 2023, Rabu",
+  "12 Januari 2023, Kamis",
+  "13 Januari 2023, Jumat",
+  "14 Januari 2023, Sabtu",
+  "15 Januari 2023, Minggu",
+  "16 Januari 2023, Senin",
+  "17 Januari 2023, Selasa",
+  "18 Januari 2023, Rabu",
+  "19 Januari 2023, Kamis",
+  "20 Januari 2023, Jumat",
+  "21 Januari 2023, Sabtu",
+  "22 Januari 2023, Minggu",
+  "23 Januari 2023, Senin",
+  "24 Januari 2023, Selasa",
+  "25 Januari 2023, Rabu",
+  "26 Januari 2023, Kamis",
+  "27 Januari 2023, Jumat",
+  "28 Januari 2023, Sabtu",
+  "29 Januari 2023, Minggu",
+  "30 Januari 2023, Senin",
+  "31 Januari 2023, Selasa",
+  "1 Februari 2023, Rabu",
+  "2 Februari 2023, Kamis",
+  "3 Februari 2023, Jumat",
+  "4 Februari 2023, Sabtu",
+  "5 Februari 2023, Minggu",
+  "6 Februari 2023, Senin",
+  "7 Februari 2023, Selasa",
+  "8 Februari 2023, Rabu",
+  "9 Februari 2023, Kamis",
+  "10 Februari 2023, Jumat",
+  "11 Februari 2023, Sabtu",
+  "12 Februari 2023, Minggu",
+  "13 Februari 2023, Senin",
+  "14 Februari 2023, Selasa",
+  "15 Februari 2023, Rabu",
+  "16 Februari 2023, Kamis",
+  "17 Februari 2023, Jumat",
+  "18 Februari 2023, Sabtu",
+  "19 Februari 2023, Minggu",
+  "20 Februari 2023, Senin",
+  "21 Februari 2023, Selasa",
+  "22 Februari 2023, Rabu",
+  "23 Februari 2023, Kamis",
+  "24 Februari 2023, Jumat",
+  "25 Februari 2023, Sabtu",
+  "26 Februari 2023, Minggu",
+  "27 Februari 2023, Senin",
+  "28 Februari 2023, Selasa",
+  "1 Maret 2023, Rabu",
+  "2 Maret 2023, Kamis",
+  "3 Maret 2023, Jumat",
+  "4 Maret 2023, Sabtu",
+  "5 Maret 2023, Minggu",
+  "6 Maret 2023, Senin",
+  "7 Maret 2023, Selasa",
+  "8 Maret 2023, Rabu",
+  "9 Maret 2023, Kamis",
+  "10 Maret 2023, Jumat",
+  "11 Maret 2023, Sabtu",
+  "12 Maret 2023, Minggu",
+  "13 Maret 2023, Senin",
+  "14 Maret 2023, Selasa",
+  "15 Maret 2023, Rabu",
+  "16 Maret 2023, Kamis",
+  "17 Maret 2023, Jumat",
+  "18 Maret 2023, Sabtu",
+  "19 Maret 2023, Minggu",
+  "20 Maret 2023, Senin",
+  "21 Maret 2023, Selasa",
+  "22 Maret 2023, Rabu",
+  "23 Maret 2023, Kamis",
+  "24 Maret 2023, Jumat",
+  "25 Maret 2023, Sabtu",
+  "26 Maret 2023, Minggu",
+  "27 Maret 2023, Senin",
+  "28 Maret 2023, Selasa",
+  "29 Maret 2023, Rabu",
+  "30 Maret 2023, Kamis",
+  "31 Maret 2023, Jumat",
+  "1 April 2023, Sabtu",
+  "2 April 2023, Minggu",
+  "3 April 2023, Senin",
+  "4 April 2023, Selasa",
+  "5 April 2023, Rabu",
+  "6 April 2023, Kamis",
+  "7 April 2023, Jumat",
+  "8 April 2023, Sabtu",
+  "9 April 2023, Minggu",
+  "10 April 2023, Senin",
+  "11 April 2023, Selasa",
+  "12 April 2023, Rabu",
+  "13 April 2023, Kamis",
+  "14 April 2023, Jumat",
+  "15 April 2023, Sabtu",
+  "16 April 2023, Minggu",
+  "17 April 2023, Senin",
+  "18 April 2023, Selasa",
+  "19 April 2023, Rabu",
+  "20 April 2023, Kamis",
+  "21 April 2023, Jumat",
+  "22 April 2023, Sabtu",
+  "23 April 2023, Minggu",
+  "24 April 2023, Senin",
+  "25 April 2023, Selasa",
+  "26 April 2023, Rabu",
+  "27 April 2023, Kamis",
+  "28 April 2023, Jumat",
+  "29 April 2023, Sabtu",
+  "30 April 2023, Minggu",
+  "1 Mei 2023, Senin",
+  "2 Mei 2023, Selasa",
+  "3 Mei 2023, Rabu",
+  "4 Mei 2023, Kamis",
+  "5 Mei 2023, Jumat",
+  "6 Mei 2023, Sabtu",
+  "7 Mei 2023, Minggu",
+  "8 Mei 2023, Senin",
+  "9 Mei 2023, Selasa",
+  "10 Mei 2023, Rabu",
+  "11 Mei 2023, Kamis",
+  "12 Mei 2023, Jumat",
+  "13 Mei 2023, Sabtu",
+  "14 Mei 2023, Minggu",
+  "15 Mei 2023, Senin",
+  "16 Mei 2023, Selasa",
+  "17 Mei 2023, Rabu",
+  "18 Mei 2023, Kamis",
+  "19 Mei 2023, Jumat",
+  "20 Mei 2023, Sabtu",
+  "21 Mei 2023, Minggu",
+  "22 Mei 2023, Senin",
+  "23 Mei 2023, Selasa",
+  "24 Mei 2023, Rabu",
+  "25 Mei 2023, Kamis",
+  "26 Mei 2023, Jumat",
+  "27 Mei 2023, Sabtu",
+  "28 Mei 2023, Minggu",
+  "29 Mei 2023, Senin",
+  "30 Mei 2023, Selasa",
+  "31 Mei 2023, Rabu",
+  "1 Juni 2023, Kamis",
+  "2 Juni 2023, Jumat",
+  "3 Juni 2023, Sabtu",
+  "4 Juni 2023, Minggu",
+  "5 Juni 2023, Senin",
+  "6 Juni 2023, Selasa",
+  "7 Juni 2023, Rabu",
+  "8 Juni 2023, Kamis",
+  "9 Juni 2023, Jumat",
+  "10 Juni 2023, Sabtu",
+  "11 Juni 2023, Minggu",
+  "12 Juni 2023, Senin",
+  "13 Juni 2023, Selasa",
+  "14 Juni 2023, Rabu",
+  "15 Juni 2023, Kamis",
+  "16 Juni 2023, Jumat",
+  "17 Juni 2023, Sabtu",
+  "18 Juni 2023, Minggu",
+  "19 Juni 2023, Senin",
+  "20 Juni 2023, Selasa",
+  "21 Juni 2023, Rabu",
+  "22 Juni 2023, Kamis",
+  "23 Juni 2023, Jumat",
+  "24 Juni 2023, Sabtu",
+  "25 Juni 2023, Minggu",
+  "26 Juni 2023, Senin",
+  "27 Juni 2023, Selasa",
+  "28 Juni 2023, Rabu",
+  "29 Juni 2023, Kamis",
+  "30 Juni 2023, Jumat",
+  "1 Juli 2023, Sabtu",
+  "2 Juli 2023, Minggu",
+  "3 Juli 2023, Senin",
+  "4 Juli 2023, Selasa",
+  "5 Juli 2023, Rabu",
+  "6 Juli 2023, Kamis",
+  "7 Juli 2023, Jumat",
+  "8 Juli 2023, Sabtu",
+  "9 Juli 2023, Minggu",
+  "10 Juli 2023, Senin",
+  "11 Juli 2023, Selasa",
+  "12 Juli 2023, Rabu",
+  "13 Juli 2023, Kamis",
+  "14 Juli 2023, Jumat",
+  "15 Juli 2023, Sabtu",
+  "16 Juli 2023, Minggu",
+  "17 Juli 2023, Senin",
+  "18 Juli 2023, Selasa",
+  "19 Juli 2023, Rabu",
+  "20 Juli 2023, Kamis",
+  "21 Juli 2023, Jumat",
+  "22 Juli 2023, Sabtu",
+  "23 Juli 2023, Minggu",
+  "24 Juli 2023, Senin",
+  "25 Juli 2023, Selasa",
+  "26 Juli 2023, Rabu",
+  "27 Juli 2023, Kamis",
+  "28 Juli 2023, Jumat",
+  "29 Juli 2023, Sabtu",
+  "30 Juli 2023, Minggu",
+  "31 Juli 2023, Senin",
+  "1 Agustus 2023, Selasa",
+  "2 Agustus 2023, Rabu",
+  "3 Agustus 2023, Kamis",
+  "4 Agustus 2023, Jumat",
+  "5 Agustus 2023, Sabtu",
+  "6 Agustus 2023, Minggu",
+  "7 Agustus 2023, Senin",
+  "8 Agustus 2023, Selasa",
+  "9 Agustus 2023, Rabu",
+  "10 Agustus 2023, Kamis",
+  "11 Agustus 2023, Jumat",
+  "12 Agustus 2023, Sabtu",
+  "13 Agustus 2023, Minggu",
+  "14 Agustus 2023, Senin",
+  "15 Agustus 2023, Selasa",
+  "16 Agustus 2023, Rabu",
+  "17 Agustus 2023, Kamis",
+  "18 Agustus 2023, Jumat",
+  "19 Agustus 2023, Sabtu",
+  "20 Agustus 2023, Minggu",
+  "21 Agustus 2023, Senin",
+  "22 Agustus 2023, Selasa",
+  "23 Agustus 2023, Rabu",
+  "24 Agustus 2023, Kamis",
+  "25 Agustus 2023, Jumat",
+  "26 Agustus 2023, Sabtu",
+  "27 Agustus 2023, Minggu",
+  "28 Agustus 2023, Senin",
+  "29 Agustus 2023, Selasa",
+  "30 Agustus 2023, Rabu",
+  "31 Agustus 2023, Kamis",
+  "1 September 2023, Jumat",
+  "2 September 2023, Sabtu",
+  "3 September 2023, Minggu",
+  "4 September 2023, Senin",
+  "5 September 2023, Selasa",
+  "6 September 2023, Rabu",
+  "7 September 2023, Kamis",
+  "8 September 2023, Jumat",
+  "9 September 2023, Sabtu",
+  "10 September 2023, Minggu",
+  "11 September 2023, Senin",
+  "12 September 2023, Selasa",
+  "13 September 2023, Rabu",
+  "14 September 2023, Kamis",
+  "15 September 2023, Jumat",
+  "16 September 2023, Sabtu",
+  "17 September 2023, Minggu",
+  "18 September 2023, Senin",
+  "19 September 2023, Selasa",
+  "20 September 2023, Rabu",
+  "21 September 2023, Kamis",
+  "22 September 2023, Jumat",
+  "23 September 2023, Sabtu",
+  "24 September 2023, Minggu",
+  "25 September 2023, Senin",
+  "26 September 2023, Selasa",
+  "27 September 2023, Rabu",
+  "28 September 2023, Kamis",
+  "29 September 2023, Jumat",
+  "30 September 2023, Sabtu",
+  "1 Oktober 2023, Minggu",
+  "2 Oktober 2023, Senin",
+  "3 Oktober 2023, Selasa",
+  "4 Oktober 2023, Rabu",
+  "5 Oktober 2023, Kamis",
+  "6 Oktober 2023, Jumat",
+  "7 Oktober 2023, Sabtu",
+  "8 Oktober 2023, Minggu",
+  "9 Oktober 2023, Senin",
+  "10 Oktober 2023, Selasa",
+  "11 Oktober 2023, Rabu",
+  "12 Oktober 2023, Kamis",
+  "13 Oktober 2023, Jumat",
+  "14 Oktober 2023, Sabtu",
+  "15 Oktober 2023, Minggu",
+  "16 Oktober 2023, Senin",
+  "17 Oktober 2023, Selasa",
+  "18 Oktober 2023, Rabu",
+  "19 Oktober 2023, Kamis",
+  "20 Oktober 2023, Jumat",
+  "21 Oktober 2023, Sabtu",
+  "22 Oktober 2023, Minggu",
+  "23 Oktober 2023, Senin",
+  "24 Oktober 2023, Selasa",
+  "25 Oktober 2023, Rabu",
+  "26 Oktober 2023, Kamis",
+  "27 Oktober 2023, Jumat",
+  "28 Oktober 2023, Sabtu",
+  "29 Oktober 2023, Minggu",
+  "30 Oktober 2023, Senin",
+  "31 Oktober 2023, Selasa",
+  "1 November 2023, Rabu",
+  "2 November 2023, Kamis",
+  "3 November 2023, Jumat",
+  "4 November 2023, Sabtu",
+  "5 November 2023, Minggu",
+  "6 November 2023, Senin",
+  "7 November 2023, Selasa",
+  "8 November 2023, Rabu",
+  "9 November 2023, Kamis",
+  "10 November 2023, Jumat",
+  "11 November 2023, Sabtu",
+  "12 November 2023, Minggu",
+  "13 November 2023, Senin",
+  "14 November 2023, Selasa",
+  "15 November 2023, Rabu",
+  "16 November 2023, Kamis",
+  "17 November 2023, Jumat",
+  "18 November 2023, Sabtu",
+  "19 November 2023, Minggu",
+  "20 November 2023, Senin",
+  "21 November 2023, Selasa",
+  "22 November 2023, Rabu",
+  "23 November 2023, Kamis",
+  "24 November 2023, Jumat",
+  "25 November 2023, Sabtu",
+  "26 November 2023, Minggu",
+  "27 November 2023, Senin",
+  "28 November 2023, Selasa",
+  "29 November 2023, Rabu",
+  "30 November 2023, Kamis",
+  "1 Desember 2023, Jumat",
+  "2 Desember 2023, Sabtu",
+  "3 Desember 2023, Minggu",
+  "4 Desember 2023, Senin",
+  "5 Desember 2023, Selasa",
+  "6 Desember 2023, Rabu",
+  "7 Desember 2023, Kamis",
+  "8 Desember 2023, Jumat",
+  "9 Desember 2023, Sabtu",
+  "10 Desember 2023, Minggu",
+  "11 Desember 2023, Senin",
+  "12 Desember 2023, Selasa",
+  "13 Desember 2023, Rabu",
+  "14 Desember 2023, Kamis",
+  "15 Desember 2023, Jumat",
+  "16 Desember 2023, Sabtu",
+  "17 Desember 2023, Minggu",
+  "18 Desember 2023, Senin",
+  "19 Desember 2023, Selasa",
+  "20 Desember 2023, Rabu",
+  "21 Desember 2023, Kamis",
+  "22 Desember 2023, Jumat",
+  "23 Desember 2023, Sabtu",
+  "24 Desember 2023, Minggu",
+  "25 Desember 2023, Senin",
+  "26 Desember 2023, Selasa",
+  "27 Desember 2023, Rabu",
+  "28 Desember 2023, Kamis",
+  "29 Desember 2023, Jumat",
+  "30 Desember 2023, Sabtu",
+  "31 Desember 2023, Minggu",
+  "1 Januari 2024, Senin",
+  "2 Januari 2024, Selasa",
+  "3 Januari 2024, Rabu",
+  "4 Januari 2024, Kamis",
+  "5 Januari 2024, Jumat",
+  "6 Januari 2024, Sabtu",
+  "7 Januari 2024, Minggu",
+  "8 Januari 2024, Senin",
+  "9 Januari 2024, Selasa",
+  "10 Januari 2024, Rabu",
+  "11 Januari 2024, Kamis",
+  "12 Januari 2024, Jumat",
+  "13 Januari 2024, Sabtu",
+  "14 Januari 2024, Minggu",
+  "15 Januari 2024, Senin",
+  "16 Januari 2024, Selasa",
+  "17 Januari 2024, Rabu",
+  "18 Januari 2024, Kamis",
+  "19 Januari 2024, Jumat",
+  "20 Januari 2024, Sabtu",
+  "21 Januari 2024, Minggu",
+  "22 Januari 2024, Senin",
+  "23 Januari 2024, Selasa",
+  "24 Januari 2024, Rabu",
+  "25 Januari 2024, Kamis",
+  "26 Januari 2024, Jumat",
+  "27 Januari 2024, Sabtu",
+  "28 Januari 2024, Minggu",
+  "29 Januari 2024, Senin",
+  "30 Januari 2024, Selasa",
+  "31 Januari 2024, Rabu",
+  "1 Februari 2024, Kamis",
+  "2 Februari 2024, Jumat",
+  "3 Februari 2024, Sabtu",
+  "4 Februari 2024, Minggu",
+  "5 Februari 2024, Senin",
+  "6 Februari 2024, Selasa",
+  "7 Februari 2024, Rabu",
+  "8 Februari 2024, Kamis",
+  "9 Februari 2024, Jumat",
+  "10 Februari 2024, Sabtu",
+  "11 Februari 2024, Minggu",
+  "12 Februari 2024, Senin",
+  "13 Februari 2024, Selasa",
+  "14 Februari 2024, Rabu",
+  "15 Februari 2024, Kamis",
+  "16 Februari 2024, Jumat",
+  "17 Februari 2024, Sabtu",
+  "18 Februari 2024, Minggu",
+  "19 Februari 2024, Senin",
+  "20 Februari 2024, Selasa",
+  "21 Februari 2024, Rabu",
+  "22 Februari 2024, Kamis",
+  "23 Februari 2024, Jumat",
+  "24 Februari 2024, Sabtu",
+  "25 Februari 2024, Minggu",
+  "26 Februari 2024, Senin",
+  "27 Februari 2024, Selasa",
+  "28 Februari 2024, Rabu",
+  "29 Februari 2024, Kamis",
+  "1 Maret 2024, Jumat",
+  "2 Maret 2024, Sabtu",
+  "3 Maret 2024, Minggu",
+  "4 Maret 2024, Senin",
+  "5 Maret 2024, Selasa",
+  "6 Maret 2024, Rabu",
+  "7 Maret 2024, Kamis",
+  "8 Maret 2024, Jumat",
+  "9 Maret 2024, Sabtu",
+  "10 Maret 2024, Minggu",
+  "11 Maret 2024, Senin",
+  "12 Maret 2024, Selasa",
+  "13 Maret 2024, Rabu",
+  "14 Maret 2024, Kamis",
+  "15 Maret 2024, Jumat",
+  "16 Maret 2024, Sabtu",
+  "17 Maret 2024, Minggu",
+  "18 Maret 2024, Senin",
+  "19 Maret 2024, Selasa",
+  "20 Maret 2024, Rabu",
+  "21 Maret 2024, Kamis",
+  "22 Maret 2024, Jumat",
+  "23 Maret 2024, Sabtu",
+  "24 Maret 2024, Minggu",
+  "25 Maret 2024, Senin",
+  "26 Maret 2024, Selasa",
+  "27 Maret 2024, Rabu",
+  "28 Maret 2024, Kamis",
+  "29 Maret 2024, Jumat",
+  "30 Maret 2024, Sabtu",
+  "31 Maret 2024, Minggu",
+  "1 April 2024, Senin",
+  "2 April 2024, Selasa",
+  "3 April 2024, Rabu",
+  "4 April 2024, Kamis",
+  "5 April 2024, Jumat",
+  "6 April 2024, Sabtu",
+  "7 April 2024, Minggu",
+  "8 April 2024, Senin",
+  "9 April 2024, Selasa",
+  "10 April 2024, Rabu",
+  "11 April 2024, Kamis",
+  "12 April 2024, Jumat",
+  "13 April 2024, Sabtu",
+  "14 April 2024, Minggu",
+  "15 April 2024, Senin",
+  "16 April 2024, Selasa",
+  "17 April 2024, Rabu",
+  "18 April 2024, Kamis",
+  "19 April 2024, Jumat",
+  "20 April 2024, Sabtu",
+  "21 April 2024, Minggu",
+  "22 April 2024, Senin",
+  "23 April 2024, Selasa",
+  "24 April 2024, Rabu",
+  "25 April 2024, Kamis",
+  "26 April 2024, Jumat",
+  "27 April 2024, Sabtu",
+  "28 April 2024, Minggu",
+  "29 April 2024, Senin",
+  "30 April 2024, Selasa",
+  "1 Mei 2024, Rabu",
+  "2 Mei 2024, Kamis",
+  "3 Mei 2024, Jumat",
+  "4 Mei 2024, Sabtu",
+  "5 Mei 2024, Minggu",
+  "6 Mei 2024, Senin",
+  "7 Mei 2024, Selasa",
+  "8 Mei 2024, Rabu",
+  "9 Mei 2024, Kamis",
+  "10 Mei 2024, Jumat",
+  "11 Mei 2024, Sabtu",
+  "12 Mei 2024, Minggu",
+  "13 Mei 2024, Senin",
+  "14 Mei 2024, Selasa",
+  "15 Mei 2024, Rabu",
+  "16 Mei 2024, Kamis",
+  "17 Mei 2024, Jumat",
+  "18 Mei 2024, Sabtu",
+  "19 Mei 2024, Minggu",
+  "20 Mei 2024, Senin",
+  "21 Mei 2024, Selasa",
+  "22 Mei 2024, Rabu",
+  "23 Mei 2024, Kamis",
+  "24 Mei 2024, Jumat",
+  "25 Mei 2024, Sabtu",
+  "26 Mei 2024, Minggu",
+  "27 Mei 2024, Senin",
+  "28 Mei 2024, Selasa",
+  "29 Mei 2024, Rabu",
+  "30 Mei 2024, Kamis",
+  "31 Mei 2024, Jumat",
+  "1 Juni 2024, Sabtu",
+  "2 Juni 2024, Minggu",
+  "3 Juni 2024, Senin",
+  "4 Juni 2024, Selasa",
+  "5 Juni 2024, Rabu",
+  "6 Juni 2024, Kamis",
+  "7 Juni 2024, Jumat",
+  "8 Juni 2024, Sabtu",
+  "9 Juni 2024, Minggu",
+  "10 Juni 2024, Senin",
+  "11 Juni 2024, Selasa",
+  "12 Juni 2024, Rabu",
+  "13 Juni 2024, Kamis",
+  "14 Juni 2024, Jumat",
+  "15 Juni 2024, Sabtu",
+  "16 Juni 2024, Minggu",
+  "17 Juni 2024, Senin",
+  "18 Juni 2024, Selasa",
+  "19 Juni 2024, Rabu",
+  "20 Juni 2024, Kamis",
+  "21 Juni 2024, Jumat",
+  "22 Juni 2024, Sabtu",
+  "23 Juni 2024, Minggu",
+  "24 Juni 2024, Senin",
+  "25 Juni 2024, Selasa",
+  "26 Juni 2024, Rabu",
+  "27 Juni 2024, Kamis",
+  "28 Juni 2024, Jumat",
+  "29 Juni 2024, Sabtu",
+  "30 Juni 2024, Minggu",
+  "1 Juli 2024, Senin",
+  "2 Juli 2024, Selasa",
+  "3 Juli 2024, Rabu",
+  "4 Juli 2024, Kamis",
+  "5 Juli 2024, Jumat",
+  "6 Juli 2024, Sabtu",
+  "7 Juli 2024, Minggu",
+  "8 Juli 2024, Senin",
+  "9 Juli 2024, Selasa",
+  "10 Juli 2024, Rabu",
+  "11 Juli 2024, Kamis",
+  "12 Juli 2024, Jumat",
+  "13 Juli 2024, Sabtu",
+  "14 Juli 2024, Minggu",
+  "15 Juli 2024, Senin",
+  "16 Juli 2024, Selasa",
+  "17 Juli 2024, Rabu",
+  "18 Juli 2024, Kamis",
+  "19 Juli 2024, Jumat",
+  "20 Juli 2024, Sabtu",
+  "21 Juli 2024, Minggu",
+  "22 Juli 2024, Senin",
+  "23 Juli 2024, Selasa",
+  "24 Juli 2024, Rabu",
+  "25 Juli 2024, Kamis",
+  "26 Juli 2024, Jumat",
+  "27 Juli 2024, Sabtu",
+  "28 Juli 2024, Minggu",
+  "29 Juli 2024, Senin",
+  "30 Juli 2024, Selasa",
+  "31 Juli 2024, Rabu",
+  "1 Agustus 2024, Kamis",
+  "2 Agustus 2024, Jumat",
+  "3 Agustus 2024, Sabtu",
+  "4 Agustus 2024, Minggu",
+  "5 Agustus 2024, Senin",
+  "6 Agustus 2024, Selasa",
+  "7 Agustus 2024, Rabu",
+  "8 Agustus 2024, Kamis",
+  "9 Agustus 2024, Jumat",
+  "10 Agustus 2024, Sabtu",
+  "11 Agustus 2024, Minggu",
+  "12 Agustus 2024, Senin",
+  "13 Agustus 2024, Selasa",
+  "14 Agustus 2024, Rabu",
+  "15 Agustus 2024, Kamis",
+  "16 Agustus 2024, Jumat",
+  "17 Agustus 2024, Sabtu",
+  "18 Agustus 2024, Minggu",
+  "19 Agustus 2024, Senin",
+  "20 Agustus 2024, Selasa",
+  "21 Agustus 2024, Rabu",
+  "22 Agustus 2024, Kamis",
+  "23 Agustus 2024, Jumat",
+  "24 Agustus 2024, Sabtu",
+  "25 Agustus 2024, Minggu",
+  "26 Agustus 2024, Senin",
+  "27 Agustus 2024, Selasa",
+  "28 Agustus 2024, Rabu",
+  "29 Agustus 2024, Kamis",
+  "30 Agustus 2024, Jumat",
+  "31 Agustus 2024, Sabtu",
+  "1 September 2024, Minggu",
+  "2 September 2024, Senin",
+  "3 September 2024, Selasa",
+  "4 September 2024, Rabu",
+  "5 September 2024, Kamis",
+  "6 September 2024, Jumat",
+  "7 September 2024, Sabtu",
+  "8 September 2024, Minggu",
+  "9 September 2024, Senin",
+  "10 September 2024, Selasa",
+  "11 September 2024, Rabu",
+  "12 September 2024, Kamis",
+  "13 September 2024, Jumat",
+  "14 September 2024, Sabtu",
+  "15 September 2024, Minggu",
+  "16 September 2024, Senin",
+  "17 September 2024, Selasa",
+  "18 September 2024, Rabu",
+  "19 September 2024, Kamis",
+  "20 September 2024, Jumat",
+  "21 September 2024, Sabtu",
+  "22 September 2024, Minggu",
+  "23 September 2024, Senin",
+  "24 September 2024, Selasa",
+  "25 September 2024, Rabu",
+  "26 September 2024, Kamis",
+  "27 September 2024, Jumat",
+  "28 September 2024, Sabtu",
+  "29 September 2024, Minggu",
+  "30 September 2024, Senin",
+  "1 Oktober 2024, Selasa",
+  "2 Oktober 2024, Rabu",
+  "3 Oktober 2024, Kamis",
+  "4 Oktober 2024, Jumat",
+  "5 Oktober 2024, Sabtu",
+  "6 Oktober 2024, Minggu",
+  "7 Oktober 2024, Senin",
+  "8 Oktober 2024, Selasa",
+  "9 Oktober 2024, Rabu",
+  "10 Oktober 2024, Kamis",
+  "11 Oktober 2024, Jumat",
+  "12 Oktober 2024, Sabtu",
+  "13 Oktober 2024, Minggu",
+  "14 Oktober 2024, Senin",
+  "15 Oktober 2024, Selasa",
+  "16 Oktober 2024, Rabu",
+  "17 Oktober 2024, Kamis",
+  "18 Oktober 2024, Jumat",
+  "19 Oktober 2024, Sabtu",
+  "20 Oktober 2024, Minggu",
+  "21 Oktober 2024, Senin",
+  "22 Oktober 2024, Selasa",
+  "23 Oktober 2024, Rabu",
+  "24 Oktober 2024, Kamis",
+  "25 Oktober 2024, Jumat",
+  "26 Oktober 2024, Sabtu",
+  "27 Oktober 2024, Minggu",
+  "28 Oktober 2024, Senin",
+  "29 Oktober 2024, Selasa",
+  "30 Oktober 2024, Rabu",
+  "31 Oktober 2024, Kamis",
+  "1 November 2024, Jumat",
+  "2 November 2024, Sabtu",
+  "3 November 2024, Minggu",
+  "4 November 2024, Senin",
+  "5 November 2024, Selasa",
+  "6 November 2024, Rabu",
+  "7 November 2024, Kamis",
+  "8 November 2024, Jumat",
+  "9 November 2024, Sabtu",
+  "10 November 2024, Minggu",
+  "11 November 2024, Senin",
+  "12 November 2024, Selasa",
+  "13 November 2024, Rabu",
+  "14 November 2024, Kamis",
+  "15 November 2024, Jumat",
+  "16 November 2024, Sabtu",
+  "17 November 2024, Minggu",
+  "18 November 2024, Senin",
+  "19 November 2024, Selasa",
+  "20 November 2024, Rabu",
+  "21 November 2024, Kamis",
+  "22 November 2024, Jumat",
+  "23 November 2024, Sabtu",
+  "24 November 2024, Minggu",
+  "25 November 2024, Senin",
+  "26 November 2024, Selasa",
+  "27 November 2024, Rabu",
+  "28 November 2024, Kamis",
+  "29 November 2024, Jumat",
+  "30 November 2024, Sabtu",
+  "1 Desember 2024, Minggu",
+  "2 Desember 2024, Senin",
+  "3 Desember 2024, Selasa",
+  "4 Desember 2024, Rabu",
+  "5 Desember 2024, Kamis",
+  "6 Desember 2024, Jumat",
+  "7 Desember 2024, Sabtu",
+  "8 Desember 2024, Minggu",
+  "9 Desember 2024, Senin",
+  "10 Desember 2024, Selasa",
+  "11 Desember 2024, Rabu",
+  "12 Desember 2024, Kamis",
+  "13 Desember 2024, Jumat",
+  "14 Desember 2024, Sabtu",
+  "15 Desember 2024, Minggu",
+  "16 Desember 2024, Senin",
+  "17 Desember 2024, Selasa",
+  "18 Desember 2024, Rabu",
+  "19 Desember 2024, Kamis",
+  "20 Desember 2024, Jumat",
+  "21 Desember 2024, Sabtu",
+  "22 Desember 2024, Minggu",
+  "23 Desember 2024, Senin",
+  "24 Desember 2024, Selasa",
+  "25 Desember 2024, Rabu",
+  "26 Desember 2024, Kamis",
+  "27 Desember 2024, Jumat",
+  "28 Desember 2024, Sabtu",
+  "29 Desember 2024, Minggu",
+  "30 Desember 2024, Senin",
+  "31 Desember 2024, Selasa",
+  "1 Januari 2025, Rabu",
+  "2 Januari 2025, Kamis",
+  "3 Januari 2025, Jumat",
+  "4 Januari 2025, Sabtu",
+  "5 Januari 2025, Minggu",
+  "6 Januari 2025, Senin",
+  "7 Januari 2025, Selasa",
+  "8 Januari 2025, Rabu",
+  "9 Januari 2025, Kamis",
+  "10 Januari 2025, Jumat",
+  "11 Januari 2025, Sabtu",
+  "12 Januari 2025, Minggu",
+  "13 Januari 2025, Senin",
+  "14 Januari 2025, Selasa",
+  "15 Januari 2025, Rabu",
+  "16 Januari 2025, Kamis",
+  "17 Januari 2025, Jumat",
+  "18 Januari 2025, Sabtu",
+  "19 Januari 2025, Minggu",
+  "20 Januari 2025, Senin",
+  "21 Januari 2025, Selasa",
+  "22 Januari 2025, Rabu",
+  "23 Januari 2025, Kamis",
+  "24 Januari 2025, Jumat",
+  "25 Januari 2025, Sabtu",
+  "26 Januari 2025, Minggu",
+  "27 Januari 2025, Senin",
+  "28 Januari 2025, Selasa",
+  "29 Januari 2025, Rabu",
+  "30 Januari 2025, Kamis",
+  "31 Januari 2025, Jumat",
+  "1 Februari 2025, Sabtu",
+  "2 Februari 2025, Minggu",
+  "3 Februari 2025, Senin",
+  "4 Februari 2025, Selasa",
+  "5 Februari 2025, Rabu",
+  "6 Februari 2025, Kamis",
+  "7 Februari 2025, Jumat",
+  "8 Februari 2025, Sabtu",
+  "9 Februari 2025, Minggu",
+  "10 Februari 2025, Senin",
+  "11 Februari 2025, Selasa",
+  "12 Februari 2025, Rabu",
+  "13 Februari 2025, Kamis",
+  "14 Februari 2025, Jumat",
+  "15 Februari 2025, Sabtu",
+  "16 Februari 2025, Minggu",
+  "17 Februari 2025, Senin",
+  "18 Februari 2025, Selasa",
+  "19 Februari 2025, Rabu",
+  "20 Februari 2025, Kamis",
+  "21 Februari 2025, Jumat",
+  "22 Februari 2025, Sabtu",
+  "23 Februari 2025, Minggu",
+  "24 Februari 2025, Senin",
+  "25 Februari 2025, Selasa",
+  "26 Februari 2025, Rabu",
+  "27 Februari 2025, Kamis",
+  "28 Februari 2025, Jumat",
+  "1 Maret 2025, Sabtu",
+  "2 Maret 2025, Minggu",
+  "3 Maret 2025, Senin",
+  "4 Maret 2025, Selasa",
+  "5 Maret 2025, Rabu",
+  "6 Maret 2025, Kamis",
+  "7 Maret 2025, Jumat",
+  "8 Maret 2025, Sabtu",
+  "9 Maret 2025, Minggu",
+  "10 Maret 2025, Senin",
+  "11 Maret 2025, Selasa",
+  "12 Maret 2025, Rabu",
+  "13 Maret 2025, Kamis",
+  "14 Maret 2025, Jumat",
+  "15 Maret 2025, Sabtu",
+  "16 Maret 2025, Minggu",
+  "17 Maret 2025, Senin",
+  "18 Maret 2025, Selasa",
+  "19 Maret 2025, Rabu",
+  "20 Maret 2025, Kamis",
+  "21 Maret 2025, Jumat",
+  "22 Maret 2025, Sabtu",
+  "23 Maret 2025, Minggu",
+  "24 Maret 2025, Senin",
+  "25 Maret 2025, Selasa",
+  "26 Maret 2025, Rabu",
+  "27 Maret 2025, Kamis",
+  "28 Maret 2025, Jumat",
+  "29 Maret 2025, Sabtu",
+  "30 Maret 2025, Minggu",
+  "31 Maret 2025, Senin",
+  "1 April 2025, Selasa",
+  "2 April 2025, Rabu",
+  "3 April 2025, Kamis",
+  "4 April 2025, Jumat",
+  "5 April 2025, Sabtu",
+  "6 April 2025, Minggu",
+  "7 April 2025, Senin",
+  "8 April 2025, Selasa",
+  "9 April 2025, Rabu",
+  "10 April 2025, Kamis",
+  "11 April 2025, Jumat",
+  "12 April 2025, Sabtu",
+  "13 April 2025, Minggu",
+  "14 April 2025, Senin",
+  "15 April 2025, Selasa",
+  "16 April 2025, Rabu",
+  "17 April 2025, Kamis",
+  "18 April 2025, Jumat",
+  "19 April 2025, Sabtu",
+  "20 April 2025, Minggu",
+  "21 April 2025, Senin",
+  "22 April 2025, Selasa",
+  "23 April 2025, Rabu",
+  "24 April 2025, Kamis",
+  "25 April 2025, Jumat",
+  "26 April 2025, Sabtu",
+  "27 April 2025, Minggu",
+  "28 April 2025, Senin",
+  "29 April 2025, Selasa",
+  "30 April 2025, Rabu",
+  "1 Mei 2025, Kamis",
+  "2 Mei 2025, Jumat",
+  "3 Mei 2025, Sabtu",
+  "4 Mei 2025, Minggu",
+  "5 Mei 2025, Senin",
+  "6 Mei 2025, Selasa",
+  "7 Mei 2025, Rabu",
+  "8 Mei 2025, Kamis",
+  "9 Mei 2025, Jumat",
+  "10 Mei 2025, Sabtu",
+  "11 Mei 2025, Minggu",
+  "12 Mei 2025, Senin",
+  "13 Mei 2025, Selasa",
+  "14 Mei 2025, Rabu",
+  "15 Mei 2025, Kamis",
+  "16 Mei 2025, Jumat",
+  "17 Mei 2025, Sabtu",
+  "18 Mei 2025, Minggu",
+  "19 Mei 2025, Senin",
+  "20 Mei 2025, Selasa",
+  "21 Mei 2025, Rabu",
+  "22 Mei 2025, Kamis",
+  "23 Mei 2025, Jumat",
+  "24 Mei 2025, Sabtu",
+  "25 Mei 2025, Minggu",
+  "26 Mei 2025, Senin",
+  "27 Mei 2025, Selasa",
+  "28 Mei 2025, Rabu",
+  "29 Mei 2025, Kamis",
+  "30 Mei 2025, Jumat",
+  "31 Mei 2025, Sabtu",
+  "1 Juni 2025, Minggu",
+  "2 Juni 2025, Senin",
+  "3 Juni 2025, Selasa",
+  "4 Juni 2025, Rabu",
+  "5 Juni 2025, Kamis",
+  "6 Juni 2025, Jumat",
+  "7 Juni 2025, Sabtu",
+  "8 Juni 2025, Minggu",
+  "9 Juni 2025, Senin",
+  "10 Juni 2025, Selasa",
+  "11 Juni 2025, Rabu",
+  "12 Juni 2025, Kamis",
+  "13 Juni 2025, Jumat",
+  "14 Juni 2025, Sabtu",
+  "15 Juni 2025, Minggu",
+  "16 Juni 2025, Senin",
+  "17 Juni 2025, Selasa",
+  "18 Juni 2025, Rabu",
+  "19 Juni 2025, Kamis",
+  "20 Juni 2025, Jumat",
+  "21 Juni 2025, Sabtu",
+  "22 Juni 2025, Minggu",
+  "23 Juni 2025, Senin",
+  "24 Juni 2025, Selasa",
+  "25 Juni 2025, Rabu",
+  "26 Juni 2025, Kamis",
+  "27 Juni 2025, Jumat",
+  "28 Juni 2025, Sabtu",
+  "29 Juni 2025, Minggu",
+  "30 Juni 2025, Senin",
+  "1 Juli 2025, Selasa",
+  "2 Juli 2025, Rabu",
+  "3 Juli 2025, Kamis",
+  "4 Juli 2025, Jumat",
+  "5 Juli 2025, Sabtu",
+  "6 Juli 2025, Minggu",
+  "7 Juli 2025, Senin",
+  "8 Juli 2025, Selasa",
+  "9 Juli 2025, Rabu",
+  "10 Juli 2025, Kamis",
+  "11 Juli 2025, Jumat",
+  "12 Juli 2025, Sabtu",
+  "13 Juli 2025, Minggu",
+  "14 Juli 2025, Senin",
+  "15 Juli 2025, Selasa",
+  "16 Juli 2025, Rabu",
+  "17 Juli 2025, Kamis",
+  "18 Juli 2025, Jumat",
+  "19 Juli 2025, Sabtu",
+  "20 Juli 2025, Minggu",
+  "21 Juli 2025, Senin",
+  "22 Juli 2025, Selasa",
+  "23 Juli 2025, Rabu",
+  "24 Juli 2025, Kamis",
+  "25 Juli 2025, Jumat",
+  "26 Juli 2025, Sabtu",
+  "27 Juli 2025, Minggu",
+  "28 Juli 2025, Senin",
+  "29 Juli 2025, Selasa",
+  "30 Juli 2025, Rabu",
+  "31 Juli 2025, Kamis",
+  "1 Agustus 2025, Jumat",
+  "2 Agustus 2025, Sabtu",
+  "3 Agustus 2025, Minggu",
+  "4 Agustus 2025, Senin",
+  "5 Agustus 2025, Selasa",
+  "6 Agustus 2025, Rabu",
+  "7 Agustus 2025, Kamis",
+  "8 Agustus 2025, Jumat",
+  "9 Agustus 2025, Sabtu",
+  "10 Agustus 2025, Minggu",
+  "11 Agustus 2025, Senin",
+  "12 Agustus 2025, Selasa",
+  "13 Agustus 2025, Rabu",
+  "14 Agustus 2025, Kamis",
+  "15 Agustus 2025, Jumat",
+  "16 Agustus 2025, Sabtu",
+  "17 Agustus 2025, Minggu",
+  "18 Agustus 2025, Senin",
+  "19 Agustus 2025, Selasa",
+  "20 Agustus 2025, Rabu",
+  "21 Agustus 2025, Kamis",
+  "22 Agustus 2025, Jumat",
+  "23 Agustus 2025, Sabtu",
+  "24 Agustus 2025, Minggu",
+  "25 Agustus 2025, Senin",
+  "26 Agustus 2025, Selasa",
+  "27 Agustus 2025, Rabu",
+  "28 Agustus 2025, Kamis",
+  "29 Agustus 2025, Jumat",
+  "30 Agustus 2025, Sabtu",
+  "31 Agustus 2025, Minggu",
+  "1 September 2025, Senin",
+  "2 September 2025, Selasa",
+  "3 September 2025, Rabu",
+  "4 September 2025, Kamis",
+  "5 September 2025, Jumat",
+  "6 September 2025, Sabtu",
+  "7 September 2025, Minggu",
+  "8 September 2025, Senin",
+  "9 September 2025, Selasa",
+  "10 September 2025, Rabu",
+  "11 September 2025, Kamis",
+  "12 September 2025, Jumat",
+  "13 September 2025, Sabtu",
+  "14 September 2025, Minggu",
+  "15 September 2025, Senin",
+  "16 September 2025, Selasa",
+  "17 September 2025, Rabu",
+  "18 September 2025, Kamis",
+  "19 September 2025, Jumat",
+  "20 September 2025, Sabtu",
+  "21 September 2025, Minggu",
+  "22 September 2025, Senin",
+  "23 September 2025, Selasa",
+  "24 September 2025, Rabu",
+  "25 September 2025, Kamis",
+  "26 September 2025, Jumat",
+  "27 September 2025, Sabtu",
+  "28 September 2025, Minggu",
+  "29 September 2025, Senin",
+  "30 September 2025, Selasa",
+  "1 Oktober 2025, Rabu",
+  "2 Oktober 2025, Kamis",
+  "3 Oktober 2025, Jumat",
+  "4 Oktober 2025, Sabtu",
+  "5 Oktober 2025, Minggu",
+  "6 Oktober 2025, Senin",
+  "7 Oktober 2025, Selasa",
+  "8 Oktober 2025, Rabu",
+  "9 Oktober 2025, Kamis",
+  "10 Oktober 2025, Jumat",
+  "11 Oktober 2025, Sabtu",
+  "12 Oktober 2025, Minggu",
+  "13 Oktober 2025, Senin",
+  "14 Oktober 2025, Selasa",
+  "15 Oktober 2025, Rabu",
+  "16 Oktober 2025, Kamis",
+  "17 Oktober 2025, Jumat",
+  "18 Oktober 2025, Sabtu",
+  "19 Oktober 2025, Minggu",
+  "3 tahun 5 bulan kita bareng",
+  "30.344 jam udah kita lewatin",
+  "seratus sembilan juta dua ratus tiga puluh delapan ribu empat ratus detik",
+  "dan di detik detik terakhir itu kita berpisah",
+  "Jangan Lupa Untuk Selalu Bahagia Ya, Ntah Sama Aku atau Lelaki Lain",
+  "Sampai Jumpa Dikesempatan Bahagia Lainnya yaa"
+];
+
+/* Fungsi untuk menampilkan halaman 25 - VERSI TEKS 2-2 */
+/* Fungsi untuk menampilkan halaman 25 - FIXED CENTER */
+async function tampilkanPage25() {
+  // Stop musik sebelumnya
+  const bgMusic = document.getElementById("bgMusic");
+  bgMusic.pause();
+  bgMusic.currentTime = 0;
+  
+  // Mulai musik ending
+  const endingMusic = document.getElementById("endingMusic");
+  try {
+    endingMusic.volume = 0.5;
+    await endingMusic.play();
+  } catch (e) {
+    console.log("Autoplay prevented");
+  }
+  
+  const container = document.getElementById("creditTextsContainer");
+  const foto = document.getElementById("creditFoto");
+  const endingLove = document.getElementById("endingLove");
+  
+  // RESET & CENTER
+  container.innerHTML = "";
+  container.style.display = "flex";
+  container.style.flexDirection = "column";
+  container.style.alignItems = "center";
+  container.style.justifyContent = "flex-start";
+  
+  foto.style.opacity = 0;
+  endingLove.classList.remove("show");
+  
+  // Tunggu sebentar, lalu munculkan foto
+  await delay(300);
+  foto.style.opacity = 0.9;
+  
+  // Tunggu lagi biar smooth
+  await delay(800);
+  
+  // Tampilkan teks satu-satu dengan timing yang pas
+  for (let i = 0; i < creditTexts.length; i++) {
+    const textEl = document.createElement("div");
+    textEl.className = "credit-text";
+    
+    // Jika ini adalah teks terakhir
+    if (i === creditTexts.length - 1) {
+      textEl.classList.add("final");
+    }
+    
+    textEl.textContent = creditTexts[i];
+    textEl.style.textAlign = "center"; // PASTIKAN TENGAH
+    container.appendChild(textEl);
+    
+    // Scroll sedikit setiap 5 teks
+    if (i % 5 === 0) {
+      setTimeout(() => {
+        container.scrollTop = container.scrollHeight - 100;
+      }, 100);
+    }
+    
+    // Animasikan muncul
+    setTimeout(() => {
+      textEl.classList.add("show");
+    }, 100);
+    
+    // Delay antar teks (bisa disesuaikan)
+    if (i < 37) {
+      await delay(1000); // Awal cepat
+    } else if (i < 1296) {
+      await delay(300); // Tengah sedang
+    } else {
+      await delay(1000); // Akhir lebih cepat
+    }
+  }
+  
+  // Scroll ke paling bawah setelah selesai
+  setTimeout(() => {
+    container.scrollTop = container.scrollHeight;
+  }, 500);
+  
+  await delay(10000);
+  
+  // FADE OUT sequence
+  const allTexts = document.querySelectorAll('.credit-text');
+  for (let i = 0; i < allTexts.length; i++) {
+    setTimeout(() => {
+      allTexts[i].style.opacity = '0.3';
+      allTexts[i].style.transform = 'scale(0.95)';
+    }, i * 30);
+  }
+  
+  // Fade out foto
+  setTimeout(() => {
+    foto.style.opacity = '0';
+    foto.style.transition = 'opacity 1.5s ease';
+  }, 1000);
+  
+  await delay(2000);
+  
+  // Tampilkan ending love
+  endingLove.classList.add("show");
+  
+  // Auto close setelah 8 detik
+  setTimeout(() => {
+    closePage();
+  }, 20000);
+}
+
+/* Fungsi delay yang lebih sederhana */
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
+</script>
+
+
+</body>
+</html>
